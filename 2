@@ -1,0 +1,13 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+int main(){
+    int funciona= setuid(0);
+    if(funciona==-1){
+        //perror("Error setuid(maría)");
+         printf("ERROR(%d): %s\n", errno,strerror(errno));
+        return -1;
+    }
+    return 1;
+}
