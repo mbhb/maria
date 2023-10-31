@@ -1,0 +1,11 @@
+#include <unistd.h>
+#include <stdio.h>
+
+int main(){
+    int funciona= setuid(0);
+    if(funciona==-1){
+        perror("Error setuid()");
+        return -1;
+    }
+    return 1;
+}
