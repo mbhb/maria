@@ -1,0 +1,8 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+int main(){
+    for(int error=1;error<256;error++) printf("ERROR(%d): %s\n", error, strerror(error));
+return 1;
+}
