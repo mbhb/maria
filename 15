@@ -1,0 +1,14 @@
+#include <time.h>
+#include <stdio.h>
+
+int main()
+{
+    char outstr[200];
+    time_t t = time(NULL);
+    struct tm *lt;
+    lt = localtime(&t);
+    strftime(outstr, sizeof(outstr), "%A, %d de %B de %Y, %I:%M", lt);
+    printf("Result string is \"%s\"\n", outstr);
+
+    return 1;
+}
