@@ -1,0 +1,19 @@
+#include <pwd.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+
+
+
+int main(){
+struct passwd *userinfo;
+userinfo = getpwuid(getuid());
+
+printf("Nombre de usuario: %s\n", userinfo->pw_name);
+printf("Directorio home: %s\n", userinfo->pw_dir);
+printf("Descripcion del usuario: %d\n", userinfo->pw_uid);
+
+return 1;
+}
