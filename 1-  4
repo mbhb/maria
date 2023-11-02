@@ -1,0 +1,7 @@
+ubuntu@ubuntu-jammy:~$ ls -ld
+drwxr-x--- 16 ubuntu ubuntu 4096 Nov  2 19:45 .
+ubuntu@ubuntu-jammy:~$ man chmod
+ubuntu@ubuntu-jammy:~$ mkdir mi_directorio
+ubuntu@ubuntu-jammy:~$ chmod -x mi_directorio
+ubuntu@ubuntu-jammy:~$ cd mi_directorio
+bash: cd: mi_directorio: Permission denied
