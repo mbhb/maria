@@ -1,0 +1,16 @@
+Para archivos (sin umask):
+
+Los permisos predeterminados para archivos son 0666 (octal), lo que significa que los propietarios y el grupo tienen permisos de lectura y escritura, y otros también tienen permisos de lectura y escritura.
+Para directorios (sin umask):
+
+Los permisos predeterminados para directorios son 0777 (octal), lo que significa que el propietario, el grupo y otros tienen permisos de lectura, escritura y ejecución en el directorio.
+
+ubuntu@ubuntu-jammy:~$ umask 027
+ubuntu@ubuntu-jammy:~$ touch nuevo.txt
+ubuntu@ubuntu-jammy:~$ ls -l nuevo.txt
+-rw-r----- 1 ubuntu ubuntu 0 Nov  2 23:12 nuevo.txt
+ubuntu@ubuntu-jammy:~$ mkdir directorio
+ubuntu@ubuntu-jammy:~$ ls -ld directorio
+drwxr-x--- 2 ubuntu ubuntu 4096 Nov  2 23:14 directorio
+ubuntu@ubuntu-jammy:~$ 
+
