@@ -1,0 +1,36 @@
+# Crear un enlace simbólico a un fichero ordinario y otro a un directorio:
+touch archivo.txt
+mkdir directorio
+ln -s archivo.txt enlace_archivo_simbolico
+ln -s directorio enlace_directorio_simbolico
+
+# Comprobar el resultado con ls -l y ls -i:
+ls -l
+ls -i
+
+# Determinar el número de inodo de cada fichero con ls -i:
+ls -i
+
+# Repetir el proceso con enlaces rígidos:
+ln archivo.txt enlace_archivo_rigido
+ln directorio enlace_directorio_rigido
+
+# Comprobar el resultado con ls -l, ls -i y stat:
+ls -l
+ls -i
+
+# Borrar uno de los enlaces rígidos:
+rm enlace_archivo_rigido
+
+# Borrar uno de los enlaces simbólicos:
+rm enlace_archivo_simbolico
+
+# Borrar el archivo original:
+rm archivo.txt
+
+# Respuestas a las preguntas:
+- Cuando se borra un enlace rígido, el archivo original sigue existiendo y solo se elimina el enlace rígido en particular. Los otros enlaces rígidos (si existen) seguirán funcionando y apuntarán al archivo original.
+
+- Si se borra uno de los enlaces simbólicos, el enlace simbólico en sí se elimina, pero no afecta al archivo original ni a otros enlaces. Sin embargo, si el enlace simbólico era el último acceso al archivo, el archivo original no se elimina y aún se puede acceder a través de otros enlaces o el nombre original.
+
+- Si se borra el archivo original, todos los enlaces (tanto rígidos como simbólicos) que apuntan a ese archivo seguirán existiendo, pero apuntarán a un archivo inexistente, lo que se conoce como "enlace roto". Los enlaces en sí mismos no se eliminan al borrar el archivo original, y se pueden eliminar manualmente si es necesario.
