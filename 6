@@ -54,3 +54,9 @@ getcwd(buf,200);
 printf("directorio:  %s\n",buf);
 free(buf);
 }
+
+
+
+Cuando el proceso padre termina antes que el hijo, el hijo generalmente se "reempareja" con el proceso init 
+(con PID 1 en sistemas Unix/Linux). El proceso init adopta el proceso hijo huérfano y se convierte en su padre. 
+El nuevo valor de PPID del proceso hijo será 1.
