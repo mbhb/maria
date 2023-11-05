@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <stdlib.h>
+
+
+int main(){
+int pid, ppid, pgid, sid;
+pid=getpid();
+ppid=getppid();
+pgid=getpgid(pid);
+sid=getsid(pid);
+printf("pid %d, ppid %d, pgid %d, sid %d\n",pid, ppid, pgid, sid );
+
+struct rlimit lm;
+getrlimit(RLIMIT_NOFILE,&lm);
+int max_ficheros;
+max_ficheros= lm.rlim_max;
+printf("max_ficheros:  %d\n",max_ficheros);
+
+char  *buf=malloc(500);
+getcwd(buf,200);
+printf("directorio:  %s\n",buf);
+free(buf);
+}
