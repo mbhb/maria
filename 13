@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+
+void sigusr1_handler(int signo) {
+    if (signo == SIGUSR1) {
+        printf("Borrado cancelado\n");
+        exit(1);
+    }
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Uso: %s <tiempo en segundos>\n", argv[0]);
+        exit(1);
+    }
+
+    int segundos = atoi(argv[1]);
+
+    signal(SIGUSR1, sigusr1_handler);
+
+    printf("Esperando %d segundos antes de borrar el archivo...\n", segundos);
+
+    // Configurar la alarma para notificar el final de la espera
+    alarm(segundos);
+
+    while (1) {
+        // El programa espera a la señal SIGALRM o SIGUSR1
+        pause();
+    }
+
+    // Eliminar el archivo ejecutable
+    unlink(argv[0]);
+
+    return 0;
+}
