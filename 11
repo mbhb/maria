@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+
+// Manejador de señales
+void signal_handler(int signo) {
+    if (signo == SIGINT) {
+        printf("Se recibió la señal SIGINT.\n");
+    } else if (signo == SIGTSTP) {
+        printf("Se recibió la señal SIGTSTP.\n");
+
+        // Desbloquear SIGTSTP
+        signal(SIGTSTP, SIG_DFL);
+        raise(SIGTSTP); // Reenviar la señal para suspender
+    }
+}
+
+int main() {
+    // Definir un conjunto de señales y bloquearlas
+    sigset_t set;
+    sigemptyset(&set); // Inicializa un conjunto de señales vacío
+    sigaddset(&set, SIGINT); // Agrega SIGINT al conjunto
+    sigaddset(&set, SIGTSTP); // Agrega SIGTSTP al conjunto
+    sigprocmask(SIG_BLOCK, &set, NULL); // Bloquea las señales definidas en el conjunto
+
+    // Obtener el número de segundos de la variable de entorno SLEEP_SECS
+    char *sleep_secs_env = getenv("SLEEP_SECS");
+    if (sleep_secs_env == NULL) {
+        printf("Variable de entorno SLEEP_SECS no encontrada. Usando 5 segundos por defecto.\n");
+        sleep(5);
+    } else {
+        int sleep_secs = atoi(sleep_secs_env);
+        sleep(sleep_secs);
+    }
+
+    // Configurar manejadores de señales para SIGINT y SIGTSTP
+    signal(SIGINT, signal_handler);
+    signal(SIGTSTP, signal_handler);
+
+    printf("El proceso ha despertado.\n");
+
+    // Realizar alguna tarea adicional si es necesario
+
+    // Terminar el programa
+    return 0;
+}
