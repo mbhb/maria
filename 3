@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Crear la tubería con nombre usando mkfifo
+mkfifo mi_tuberia
+
+# Verificar las propiedades de la tubería con stat
+echo "Propiedades de la tubería:"
+stat mi_tuberia
+
+# Listar la tubería con ls
+echo "Listar la tubería:"
+ls -l mi_tuberia
+
+# Utilizar echo y tee para escribir en la tubería
+echo "Hola, esto es un mensaje" | tee mi_tuberia &
+
+# Esperar un momento para dar tiempo a que se lea de la tubería
+sleep 1
+
+# Utilizar cat para leer de la tubería
+echo "Contenido de la tubería:"
+cat mi_tuberia
+
+# Limpiar: eliminar la tubería
+rm mi_tuberia
