@@ -1,0 +1,28 @@
+/*Ejercicio 4. Escribir un programa que abra la tubería con el nombre anterior en modo sólo escritura, 
+y escriba en ella el primer argumento del programa. En otro terminal, leer de la tubería usando un comando adecuado.*/
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdio.h> // Necesario para la función perror y printf
+
+int main(int argc, char *argv[]) {
+ 
+
+    // Crear la tubería con el nombre "uberia" y permisos 0777
+    mkfifo("uberia", 0777);
+
+    // Abrir la tubería en modo solo escritura
+    int fd = open("./uberia", O_WRONLY);
+
+
+
+    // Escribir el primer argumento del programa en la tubería
+    write(fd, argv[1], strlen(argv[1]));
+
+    // Cerrar la tubería después de escribir
+    close(fd);
+
+    return 0;
+}
