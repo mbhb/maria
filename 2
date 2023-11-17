@@ -1,0 +1,90 @@
+/*Ejercicio 2. Para la comunicación bi-direccional, es necesario crear dos tuberías, una para cada sentido: p_h y h_p. 
+Escribir un programa que implemente el mecanismo de sincronización de parada y espera:
+El padre leerá de la entrada estándar (terminal) y enviará el mensaje al proceso hijo, escribiéndolo en la tubería p_h. 
+Entonces permanecerá bloqueado esperando la confirmación por parte del hijo en la otra tubería, h_p.
+El hijo leerá de la tubería p_h, escribirá el mensaje por la salida estándar y esperará 1 segundo. 
+Entonces, enviará el carácter ‘l’ al proceso padre, escribiéndolo en la tubería h_p, para indicar que está listo. 
+Después de 10 mensajes enviará el carácter ‘q’ para indicar al padre que finalice.*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
+
+#define MESSAGE_SIZE 100
+
+int main() {
+    int p_h[2]; // Tubería del padre al hijo
+    int h_p[2]; // Tubería del hijo al padre
+
+    // Crear las tuberías
+    pipe(p_h);
+    pipe(h_p);
+
+    pid_t pid = fork();
+
+   
+    /*El hijo leerá de la tubería p_h, escribirá el mensaje por la salida estándar y esperará 1 segundo. 
+    Entonces, enviará el carácter ‘l’ al proceso padre, escribiéndolo en la tubería h_p, para indicar que está listo. 
+    Después de 10 mensajes enviará el carácter ‘q’ para indicar al padre que finalice.
+*/
+    if (pid == 0) {  // Proceso hijo
+        close(p_h[1]);  // Cerrar el extremo de escritura de la tubería p_h
+        close(h_p[0]);  // Cerrar el extremo de lectura de la tubería h_p
+
+        char message[MESSAGE_SIZE];
+
+        for (int i = 0; i < 10; ++i) {
+            // Leer el mensaje de la tubería p_h
+            ssize_t bytes_read = read(p_h[0], message, MESSAGE_SIZE);
+
+            // Escribir el mensaje en la salida estándar
+            write(STDOUT_FILENO, message, bytes_read);
+
+            // Esperar 1 segundo
+            sleep(1);
+
+            // Enviar el carácter 'l' al proceso padre a través de la tubería h_p
+            write(h_p[1], "l", 1);
+        }
+
+        write(h_p[1], "q", 1);
+
+        // Cerrar descriptores no necesarios
+        close(p_h[0]);
+        close(h_p[1]);
+
+        exit(EXIT_SUCCESS);
+    }
+    /*El padre leerá de la entrada estándar (terminal) y enviará el mensaje al proceso hijo, escribiéndolo en la tubería p_h. 
+    Entonces permanecerá bloqueado esperando la confirmación por parte del hijo en la otra tubería, h_p.*/ 
+    else {  // Proceso padre
+        close(p_h[0]);  // Cerrar el extremo de lectura de la tubería p_h
+        close(h_p[1]);  // Cerrar el extremo de escritura de la tubería h_p
+
+        char message[MESSAGE_SIZE];
+        // Leer de la entrada estándar
+        ssize_t bytes_read = read(STDIN_FILENO, message, MESSAGE_SIZE);
+        
+        // Escribir el mensaje en la tubería p_h
+        write(p_h[1], message, bytes_read);
+
+        // Esperar la confirmación del hijo a través de la tubería h_p
+        char confirmation='MARIA';
+        while(confirmation!='q'){
+            read(h_p[0], &confirmation, 1);
+        }
+
+        // Cerrar descriptores no necesarios
+        close(p_h[1]);
+        close(h_p[0]);
+
+        // Esperar al hijo para evitar procesos huérfanos
+        wait(NULL);
+
+        exit(EXIT_SUCCESS);
+    }
+
+    return 0;
+}
