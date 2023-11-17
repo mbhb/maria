@@ -19,10 +19,11 @@ int main(int argc, char *argv[]) {
 
 
     // Escribir el primer argumento del programa en la tubería
-    write(fd, argv[1], strlen(argv[1]));
+    write(fd, argv[1], argc);
 
     // Cerrar la tubería después de escribir
     close(fd);
 
     return 0;
 }
+
