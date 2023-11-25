@@ -16,45 +16,50 @@ Para probar el comportamiento con DNS, realizar este ejercicio en la máquina f�
 #include <sys/types.h>
 #include <string.h>
 
-int main(int argc, char **argv) {
-    // Verificación de la cantidad de argumentos
+int main(int argc, char **argv)
+{
+    // Verifica que se proporcionen al menos dos argumentos (nombre del programa y nombre de host/servicio).
     if (argc < 3) {
         printf("Error en los argumentos\n");
         return -1;
     }
 
-    // Estructura para configurar la búsqueda de información de dirección
+    // Estructura para especificar criterios en getaddrinfo.
     struct addrinfo hints;
-    // Puntero para almacenar los resultados obtenidos por getaddrinfo
-    struct addrinfo *resul;
 
-    // Inicializar la estructura hints a cero y configurar los parámetros
+    // Estructura para almacenar los resultados de getaddrinfo.
+    struct addrinfo *result;
+
+    // Limpia la estructura hints.
     memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_flags = AI_PASSIVE;  // Para dirección IP comodín
-    hints.ai_family = AF_UNSPEC;  // Permite IPv4 o IPv6
-    hints.ai_socktype = SOCK_STREAM;  // Tipo de socket: SOCK_STREAM (TCP)
 
-    // Obtener información de dirección para el socket
-    int rc = getaddrinfo(argv[1], argv[2], &hints, &resul);
+    // Configura los criterios para obtener direcciones de cualquier familia (IPv4 o IPv6),
+    // tipo de socket stream y flags AI_PASSIVE (para uso en bind).
+    hints.ai_flags = AI_PASSIVE;
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+    // Llama a getaddrinfo para obtener la información sobre la dirección y el servicio especificados.
+    int rc = getaddrinfo(argv[1], argv[2], &hints, &result);
     if (rc != 0) {
-        perror("Error al obtener información de dirección");
+        perror("Error en getaddrinfo: ");
         return -1;
     }
 
-    // Iterar sobre la lista de resultados obtenidos por getaddrinfo
-    for (struct addrinfo *i = resul; i != NULL; i = i->ai_next) {
+    // Itera a través de los resultados obtenidos.
+    for (struct addrinfo *i = result; i != NULL; i = i->ai_next) {
         char host[NI_MAXHOST];
         char serv[NI_MAXSERV];
 
-        // Obtener información numérica de la dirección
+        // Obtiene información legible sobre la dirección y el servicio.
         getnameinfo(i->ai_addr, i->ai_addrlen, host, NI_MAXHOST, serv, NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
 
-        // Imprimir información sobre la dirección
+        // Imprime la información obtenida.
         printf("%s %s %i %i\n", host, serv, i->ai_family, i->ai_socktype);
     }
 
-    // Liberar la memoria utilizada por getaddrinfo
-    freeaddrinfo(resul);
+    // Libera la memoria reservada por getaddrinfo.
+    freeaddrinfo(result);
 
     return 0;
 }
