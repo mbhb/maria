@@ -1,0 +1,51 @@
+Ejercicio 3. Escribir el cliente para el servidor de hora. El cliente recibirá como argumentos la dirección del servidor, 
+el puerto del servidor y el comando. Por ejemplo, para solicitar la hora, ./time_client 192.128.0.1 3000 t.#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+#define BUF_SIZE 500
+
+int main(int argc, char *argv[])
+{
+    struct addrinfo hints;
+    struct addrinfo *result;
+    int sfd, s;
+    ssize_t nread;
+    char buf[BUF_SIZE];
+
+    if (argc < 3) {
+        fprintf(stderr, "Usage: %s host port msg...\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+    /* Obtain address(es) matching host/port */
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
+    hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
+    hints.ai_flags = 0;
+    hints.ai_protocol = 0;          /* Any protocol */
+
+    s = getaddrinfo(argv[1], argv[2], &hints, &result);
+    if (s != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
+        exit(EXIT_FAILURE);
+    }
+     sfd = socket(result->ai_family, result->ai_socktype,result->ai_protocol);
+     connect(sfd, result->ai_addr, result->ai_addrlen);
+     freeaddrinfo(result); 
+
+     struct sockaddr_storage peer_addr;
+     socklen_t peer_addr_len=sizeof(peer_addr);
+     sendto(sfd, argv[3],sizeof(argv[3]), 0, result->ai_addr,peer_addr_len);
+     nread=recvfrom(sfd, buf, BUF_SIZE, 0,result->ai_addr, &peer_addr_len);
+    buf[nread]='\0';
+    printf("%s\n",buf);
+        
+    close(sfd);
+
+    return 0;
+}
