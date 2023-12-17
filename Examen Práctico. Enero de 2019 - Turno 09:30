@@ -2,6 +2,25 @@
   Las dos primeras partes easy.
   Tercera parte: ubuntu@ubuntu-jammy:~$ sudo iptables -t nat -A POSTROUTING -o enp0s8 -j MASQUERADE
                  ubuntu@ubuntu-jammy:~$ sudo iptables -t nat -L
-2.
+2.RECUERDA LA \N
+  #include <sys/types.h>
+  #include <sys/wait.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
+  
+  int main(int argc, char *argv[]) {
+      int pid = fork();
+      if (pid == 0) {
+          setsid();
+          chdir("/tmp");
+          printf("datos: %d %d %d %d\n", getpid(), getppid(), getpgid(getpid()), getsid(0));
+          execvp(argv[1], &argv[1]);
+      } else {
+          waitpid(pid, NULL, 0);
+          return 0;
+      }
+  }
+
 
 
