@@ -1,1 +1,7 @@
+1.
+  Las dos primeras partes easy.
+  Tercera parte: ubuntu@ubuntu-jammy:~$ sudo iptables -t nat -A POSTROUTING -o enp0s8 -j MASQUERADE
+                 ubuntu@ubuntu-jammy:~$ sudo iptables -t nat -L
+2.
+
 
