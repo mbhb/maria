@@ -1,17 +1,3 @@
-/*Ejercicio 2. Escribir un servidor UDP de hora de forma que:
-
-La dirección y el puerto son el primer y segundo argumento del programa. 
-Las direcciones pueden expresarse en cualquier formato (nombre de host, notación de punto…). 
-Además, el servidor debe funcionar con direcciones IPv4 e IPv6 .
-
-El servidor recibirá un comando (codificado en un carácter), de forma que ‘t’ devuelva la hora, 
-‘d’ devuelve la fecha y ‘q’ termina el proceso servidor.
-
-En cada mensaje el servidor debe imprimir el nombre y puerto del cliente, usar getnameinfo(3).
-
-Probar el funcionamiento del servidor con la herramienta Netcat (comando nc o ncat) como cliente.
-Nota: Dado que el servidor puede funcionar con direcciones IPv4 e IPv6, hay que usar 
-struct sockaddr_storage para acomodar cualquiera de ellas, por ejemplo, en recvfrom(2).*/
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,10 +8,15 @@ struct sockaddr_storage para acomodar cualquiera de ellas, por ejemplo, en recvf
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #define BUF_SIZE 500
 
+volatile sig_atomic_t exit_signal = 0;
 
+void handle_sigterm(int signum) {
+    exit_signal = 1;
+}
 
 int main(int argc, char *argv[]){
     struct addrinfo hints;
@@ -54,8 +45,15 @@ int main(int argc, char *argv[]){
     sfd = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     bind(sfd, result->ai_addr, result->ai_addrlen);
     freeaddrinfo(result);   
-   
-    while(1){
+    // Configurar el manejador de señales para SIGTERM
+    struct sigaction sa;
+    sa.sa_handler = handle_sigterm;
+    sigaction(SIGTERM, &sa, NULL);
+
+    // Imprimir el PID del proceso servidor
+    printf("PID del proceso servidor: %d\n", getpid());
+
+    while (!exit_signal) {
         int pid= fork();
         if(pid==0){
         struct sockaddr_storage peer_addr;
@@ -77,6 +75,8 @@ int main(int argc, char *argv[]){
         char host[NI_MAXHOST], service[NI_MAXSERV];
 
         s = getnameinfo((struct sockaddr *) &peer_addr, peer_addr_len, host, NI_MAXHOST,service, NI_MAXSERV,NI_NUMERICHOST);
+
+        printf("PID del proceso servidor: %d\n", getpid());
         printf("Received %d bytes from %s:%s\n", nread, host, service);
 
         
@@ -86,7 +86,6 @@ int main(int argc, char *argv[]){
         char d[]="d";
         if(q[0]==buf[0]){
             printf("Saliendo...\n");
-            close(sfd);
             break;
         }else{
             char outstr[200];
@@ -112,5 +111,6 @@ int main(int argc, char *argv[]){
             exit(0);
     }
   }
+  close(sfd);
   return 0;
 }
