@@ -1,0 +1,172 @@
+1.
+v3: To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s3 up
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s8 up
+ubuntu@ubuntu-jammy:~$ ip address add 10.0.0.1/24 dev enp0s3
+RTNETLINK answers: Operation not permitted
+ubuntu@ubuntu-jammy:~$ sudo ip address add 10.0.0.1/24 dev enp0s3
+ubuntu@ubuntu-jammy:~$ sudo ip address add 172.16.0.1/24 dev enp0s8
+ubuntu@ubuntu-jammy:~$ sudo sysctl net.ipv4.ip_forward=1
+net.ipv4.ip_forward = 1
+ubuntu@ubuntu-jammy:~$ ping 10.0.0.2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=0.544 ms
+64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=0.677 ms
+^C
+--- 10.0.0.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1025ms
+rtt min/avg/max/mdev = 0.544/0.610/0.677/0.066 ms
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/frr/frr.conf
+ubuntu@ubuntu-jammy:~$ systemctl restart frr
+Failed to restart frr.service: Access denied
+See system logs and 'systemctl status frr.service' for details.
+ubuntu@ubuntu-jammy:~$ sudo systemctl restart frr
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/frr/daemons
+ubuntu@ubuntu-jammy:~$ sudo systemctl restart frr
+ubuntu@ubuntu-jammy:~$ sudo vtysh -c "show ip rip" 
+Codes: R - RIP, C - connected, S - Static, O - OSPF, B - BGP
+Sub-codes:
+      (n) - normal, (s) - static, (d) - default, (r) - redistribute,
+      (i) - interface
+
+     Network            Next Hop         Metric From            Tag Time
+C(i) 10.0.0.0/24        0.0.0.0               1 self              0
+C(i) 172.16.0.0/24      0.0.0.0               1 self              0
+R(n) 192.168.0.128/25   10.0.0.2              2 10.0.0.2          0 02:52
+ubuntu@ubuntu-jammy:~$ ping 10.0.0.2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=0.310 ms
+64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=0.754 ms
+^C
+--- 10.0.0.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1030ms
+rtt min/avg/max/mdev = 0.310/0.532/0.754/0.222 ms
+ubuntu@ubuntu-jammy:~$ ping 192.168.0.160
+PING 192.168.0.160 (192.168.0.160) 56(84) bytes of data.
+^C
+--- 192.168.0.160 ping statistics ---
+12 packets transmitted, 0 received, 100% packet loss, time 11238ms
+
+ubuntu@ubuntu-jammy:~$ ping 192.168.0.192
+PING 192.168.0.192 (192.168.0.192) 56(84) bytes of data.
+64 bytes from 192.168.0.192: icmp_seq=1 ttl=64 time=0.386 ms
+64 bytes from 192.168.0.192: icmp_seq=2 ttl=64 time=0.256 ms
+64 bytes from 192.168.0.192: icmp_seq=3 ttl=64 time=0.343 ms
+^C
+--- 192.168.0.192 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2042ms
+rtt min/avg/max/mdev = 0.256/0.328/0.386/0.054 ms
+ubuntu@ubuntu-jammy:~$ ping 192.168.0.160
+PING 192.168.0.160 (192.168.0.160) 56(84) bytes of data.
+^C
+--- 192.168.0.160 ping statistics ---
+11 packets transmitted, 0 received, 100% packet loss, time 10231ms
+
+ubuntu@ubuntu-jammy:~$ ping 192.168.0.160
+PING 192.168.0.160 (192.168.0.160) 56(84) bytes of data.
+64 bytes from 192.168.0.160: icmp_seq=1 ttl=63 time=0.504 ms
+64 bytes from 192.168.0.160: icmp_seq=2 ttl=63 time=0.827 ms
+64 bytes from 192.168.0.160: icmp_seq=3 ttl=63 time=2.06 ms
+^C
+--- 192.168.0.160 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2026ms
+rtt min/avg/max/mdev = 0.504/1.131/2.063/0.671 ms
+ubuntu@ubuntu-jammy:~$ 
+v2:
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s3 up
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s8 up
+ubuntu@ubuntu-jammy:~$ sudo ip address add 192.168.0.192/25 dev enp0s3
+ubuntu@ubuntu-jammy:~$ sudo ip address add 10.0.0.2/24 dev enp0s8
+ubuntu@ubuntu-jammy:~$ sudo sysctl net.ipv4.ip_forward=1
+net.ipv4.ip_forward = 1
+ubuntu@ubuntu-jammy:~$ ping 192.168.0.160
+PING 192.168.0.160 (192.168.0.160) 56(84) bytes of data.
+64 bytes from 192.168.0.160: icmp_seq=1 ttl=64 time=6.34 ms
+64 bytes from 192.168.0.160: icmp_seq=2 ttl=64 time=0.240 ms
+64 bytes from 192.168.0.160: icmp_seq=3 ttl=64 time=0.227 ms
+^C
+--- 192.168.0.160 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2012ms
+rtt min/avg/max/mdev = 0.227/2.270/6.344/2.880 ms
+ubuntu@ubuntu-jammy:~$ ping 10.0.0.3
+PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+^C
+--- 10.0.0.3 ping statistics ---
+5 packets transmitted, 0 received, 100% packet loss, time 4093ms
+
+ubuntu@ubuntu-jammy:~$ ping 10.0.0.1
+PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+64 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=0.348 ms
+64 bytes from 10.0.0.1: icmp_seq=2 ttl=64 time=0.248 ms
+64 bytes from 10.0.0.1: icmp_seq=3 ttl=64 time=0.260 ms
+^C
+--- 10.0.0.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2029ms
+rtt min/avg/max/mdev = 0.248/0.285/0.348/0.044 ms
+ubuntu@ubuntu-jammy:~$ ip route
+10.0.0.0/24 dev enp0s8 proto kernel scope link src 10.0.0.2 
+192.168.0.128/25 dev enp0s3 proto kernel scope link src 192.168.0.192 
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/frr/frr.conf
+ubuntu@ubuntu-jammy:~$ sudo systemctl restart frr
+ubuntu@ubuntu-jammy:~$ ip route
+10.0.0.0/24 dev enp0s8 proto kernel scope link src 10.0.0.2 
+192.168.0.128/25 dev enp0s3 proto kernel scope link src 192.168.0.192 
+ubuntu@ubuntu-jammy:~$ sudo vtysh -c "show ip rip" 
+ripd is not running
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/frr.conf
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/frr/daemons
+ubuntu@ubuntu-jammy:~$ sudo systemctl restart frr
+ubuntu@ubuntu-jammy:~$ sudo vtysh -c "show ip rip" 
+Codes: R - RIP, C - connected, S - Static, O - OSPF, B - BGP
+Sub-codes:
+      (n) - normal, (s) - static, (d) - default, (r) - redistribute,
+      (i) - interface
+
+     Network            Next Hop         Metric From            Tag Time
+C(i) 10.0.0.0/24        0.0.0.0               1 self              0
+R(n) 172.16.0.0/24      10.0.0.1              2 10.0.0.1          0 02:57
+C(i) 192.168.0.128/25   0.0.0.0               1 self              0
+ubuntu@ubuntu-jammy:~$ ping 192.168.0.160
+PING 192.168.0.160 (192.168.0.160) 56(84) bytes of data.
+64 bytes from 192.168.0.160: icmp_seq=1 ttl=64 time=0.399 ms
+64 bytes from 192.168.0.160: icmp_seq=2 ttl=64 time=0.281 ms
+64 bytes from 192.168.0.160: icmp_seq=3 ttl=64 time=0.688 ms
+^C
+--- 192.168.0.160 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2024ms
+rtt min/avg/max/mdev = 0.281/0.456/0.688/0.170 ms
+ubuntu@ubuntu-jammy:~$ sudo sysctl net.ipv4.ip_forward=1
+net.ipv4.ip_forward = 1
+ubuntu@ubuntu-jammy:~$ 
+v1:
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@ubuntu-jammy:~$ ip link set dev enp0s3 up
+RTNETLINK answers: Operation not permitted
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s3 up
+ubuntu@ubuntu-jammy:~$ ip address add 192.168.0.160/25 dev enp0s3
+RTNETLINK answers: Operation not permitted
+ubuntu@ubuntu-jammy:~$ sudo ip address add 192.168.0.160/25 dev enp0s3
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s3 up
+ubuntu@ubuntu-jammy:~$ ping 10.0.0.1
+ping: connect: Network is unreachable
+ubuntu@ubuntu-jammy:~$ ip route
+192.168.0.128/25 dev enp0s3 proto kernel scope link src 192.168.0.160 
+ubuntu@ubuntu-jammy:~$ sudo ip route add default via 192.168.0.192
+ubuntu@ubuntu-jammy:~$ ping 10.0.0.1
+PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+64 bytes from 10.0.0.1: icmp_seq=1 ttl=63 time=0.664 ms
+64 bytes from 10.0.0.1: icmp_seq=2 ttl=63 time=0.483 ms
+64 bytes from 10.0.0.1: icmp_seq=3 ttl=63 time=0.506 ms
+64 bytes from 10.0.0.1: icmp_seq=4 ttl=63 time=0.502 ms
+^C
+--- 10.0.0.1 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3060ms
+rtt min/avg/max/mdev = 0.483/0.538/0.664/0.072 ms
+ubuntu@ubuntu-jammy:~$ 
