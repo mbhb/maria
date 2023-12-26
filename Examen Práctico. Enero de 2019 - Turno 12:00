@@ -1,0 +1,126 @@
+vm1:
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s3 up
+ubuntu@ubuntu-jammy:~$ sudo ip address add 192.168.0.2/24 dev enp0s3
+ubuntu@ubuntu-jammy:~$ sudo ip address del 192.168.0.2/24 dev enp0s3
+ubuntu@ubuntu-jammy:~$ sudo ip address add 192.168.0.1/24 dev enp0s3
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/bind/named.conf
+ubuntu@ubuntu-jammy:~$ sudo named-checkconf
+/etc/bind/named.conf:14: expected quoted string near '“'
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/bind/named.conf
+ubuntu@ubuntu-jammy:~$ sudo named-checkconf
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/bind/named.conf
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/bind/examen.es
+ubuntu@ubuntu-jammy:~$ sudo named-checkzone examen.es etc/bind/examen.es
+zone examen.es/IN: loading from master file etc/bind/examen.es failed: file not found
+zone examen.es/IN: not loaded due to errors.
+ubuntu@ubuntu-jammy:~$ sudo named-checkzone examen.es etc/bind/examen.es
+zone examen.es/IN: loading from master file etc/bind/examen.es failed: file not found
+zone examen.es/IN: not loaded due to errors.
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/bind/named.conf
+ubuntu@ubuntu-jammy:~$ sudo named-checkconf
+ubuntu@ubuntu-jammy:~$ sudo named-checkzone examen.es etc/bind/examen.es
+zone examen.es/IN: loading from master file etc/bind/examen.es failed: file not found
+zone examen.es/IN: not loaded due to errors.
+ubuntu@ubuntu-jammy:~$ sudo named-checkzone examen.es /etc/bind/examen.es
+dns_rdata_fromtext: /etc/bind/examen.es:5: near 'mail.examen.es': not a valid number
+zone examen.es/IN: loading from master file /etc/bind/examen.es failed: not a valid number
+zone examen.es/IN: not loaded due to errors.
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/bind/examen.es
+ubuntu@ubuntu-jammy:~$ sudo named-checkzone examen.es /etc/bind/examen.es
+zone examen.es/IN: loaded serial 2003080800
+OK
+ubuntu@ubuntu-jammy:~$ sudo systemctl restart named
+ubuntu@ubuntu-jammy:~$ 
+
+
+;PRINCIPAL
+$TTL 2d
+@        IN     SOA     ns.examen.es. contacto.examen.es.(2003080800 3h 15M     3W12h 2h20M)
+         IN     NS      ns.examen.es.
+         IN     MX      10 mail.examen.es.
+;REGISTROS
+ns.examen.es.   IN      A       192.168.0.1
+www.examen.es.  IN      A       192.168.0.200
+mail.examen.es. IN      A       192.168.0.250
+servidor.examen.es.     IN      CNAME   mail.examen.es
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+// This is the primary configuration file for the BIND DNS server named.
+//
+// Please read /usr/share/doc/bind9/README.Debian.gz for information on the 
+// structure of BIND configuration files in Debian, *BEFORE* you customize 
+// this configuration file.
+//
+// If you are just adding zones, please do that in /etc/bind/named.conf.local
+
+include "/etc/bind/named.conf.options";
+include "/etc/bind/named.conf.local";
+include "/etc/bind/named.conf.default-zones";
+zone "examen.es." {
+type master;
+file "/etc/bind/examen.es";
+};
+~      
+v2:
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@ubuntu-jammy:~$ sudo ip link set dev enp0s3 up
+ubuntu@ubuntu-jammy:~$ sudo ip address add 192.168.0.2/24 dev enp0s3
+ubuntu@ubuntu-jammy:~$ sudo vim /etc/resolv.conf
+ubuntu@ubuntu-jammy:~$ dig ns.examen.es
+
+; <<>> DiG 9.18.12-0ubuntu0.22.04.2-Ubuntu <<>> ns.examen.es
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 62356
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 343606c098a04c6301000000658b2e5b2217ab4cd1b29a0a (good)
+;; QUESTION SECTION:
+;ns.examen.es.			IN	A
+
+;; ANSWER SECTION:
+ns.examen.es.		172800	IN	A	192.168.0.1
+
+;; Query time: 8 msec
+;; SERVER: 192.168.0.1#53(192.168.0.1) (UDP)
+;; WHEN: Tue Dec 26 19:49:47 UTC 2023
+;; MSG SIZE  rcvd: 85
+
+ubuntu@ubuntu-jammy:~$ dig examen.es
+
+; <<>> DiG 9.18.12-0ubuntu0.22.04.2-Ubuntu <<>> examen.es
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 42321
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: c2ef3553f680056301000000658b2ea59571d190ef6698b4 (good)
+;; QUESTION SECTION:
+;examen.es.			IN	A
+
+;; AUTHORITY SECTION:
+examen.es.		8400	IN	SOA	ns.examen.es. contacto.examen.es. 2003080800 10800 900 1857600 8400
+
+;; Query time: 4 msec
+;; SERVER: 192.168.0.1#53(192.168.0.1) (UDP)
+;; WHEN: Tue Dec 26 19:51:02 UTC 2023
+;; MSG SIZE  rcvd: 114
+
+
+
+search ns.examen.es
+nameserver 192.168.0.1
+~                                                                               
+~                                           
