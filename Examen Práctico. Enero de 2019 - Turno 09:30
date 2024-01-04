@@ -113,7 +113,7 @@ int main(int argc, char *argv[]){
     }
     return 0;
 }
-3. 
+3. //RECUERDA EL STRLEN
 SIN MULTIPLESACIÓN:
 #include <sys/types.h>
 #include <stdio.h>
