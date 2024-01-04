@@ -170,3 +170,25 @@ PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
 4 packets transmitted, 4 received, 0% packet loss, time 3060ms
 rtt min/avg/max/mdev = 0.483/0.538/0.664/0.072 ms
 ubuntu@ubuntu-jammy:~$ 
+
+
+2.
+#include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <stdio.h>
+
+
+int main(int argc, char *argv[]){
+    DIR *dirp;
+    struct dirent *dir;
+    dirp= opendir(argv[1]);
+    while((dir=readdir(dirp))!=NULL){
+        printf("fichero%s\n", dir->d_name);
+        printf("usuario%d, inodo%ld, tamaño%d\n",getuid(),dir->d_ino, dir->d_reclen);
+    }
+
+
+    return 0;
+}
+
