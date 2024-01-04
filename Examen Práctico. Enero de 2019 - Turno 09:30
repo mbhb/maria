@@ -113,4 +113,67 @@ int main(int argc, char *argv[]){
     }
     return 0;
 }
+3. 
+SIN MULTIPLESACIÓN:
+#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+
+#define BUF_SIZE 500
+
+int main(int argc, char *argv[])
+{
+    struct addrinfo hints;
+    struct addrinfo *result;
+    int sfd;
+    struct sockaddr_storage peer_addr;
+    socklen_t peer_addr_len;
+    ssize_t nread;
+    char buf[BUF_SIZE];
+    
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
+    hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
+    hints.ai_flags = AI_PASSIVE;    /* For wildcard IP address */
+    hints.ai_protocol = 0;          /* Any protocol */
+    hints.ai_canonname = NULL;
+    hints.ai_addr = NULL;
+    hints.ai_next = NULL;
+
+    getaddrinfo(argv[1], argv[2], &hints, &result);
+
+    sfd = socket(result->ai_family, result->ai_socktype,result->ai_protocol);
+    bind(sfd, result->ai_addr, result->ai_addrlen);
+    //close(sfd);
+    freeaddrinfo(result);           
+
+    while(1) {
+        char outstr[200];
+        time_t t;
+        struct tm *tmp;
+
+        t = time(NULL);
+        tmp = localtime(&t);
+        strftime(outstr, sizeof(outstr), "%Y-%m-%d %H:%M:%S", tmp);
+
+
+        peer_addr_len = sizeof(peer_addr);
+        if((nread = recvfrom(sfd, buf, BUF_SIZE, 0,(struct sockaddr *) &peer_addr, &peer_addr_len))>0){
+            char host[NI_MAXHOST], service[NI_MAXSERV];
+            getnameinfo((struct sockaddr *) &peer_addr,peer_addr_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST);
+            printf("from %s:%s\n", host, service);
+            sendto(sfd, outstr, strlen(outstr), 0,(struct sockaddr *) &peer_addr, peer_addr_len);//RECUERDA EL STRLEN
+        }
+    }
+}
+
 
