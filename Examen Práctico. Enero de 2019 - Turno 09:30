@@ -89,5 +89,28 @@ int main(int argc, char *argv[])
     close(sfd);
     return 0;
 }
+2.RECUERDA /N EN EL PRINTF
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+
+
+
+int main(int argc, char *argv[]){
+    int pid= fork();
+    switch(pid){
+        case 0:
+        setsid();
+        chdir("/tmp");
+        printf("id_proceso%d,padre%d,grupo%d,padre_grupo%d,sesion%d\n",getpid(),getppid(),getpgid(getpid()),getsid(getpid()));
+        execvp(argv[1], &argv[1]);
+        break;
+        default:
+        sleep(10);
+        break;
+    }
+    return 0;
+}
 
