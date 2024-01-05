@@ -124,3 +124,55 @@ search ns.examen.es
 nameserver 192.168.0.1
 ~                                                                               
 ~                                           
+2.
+#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+#define BUF_SIZE 500
+
+int main(int argc, char *argv[])
+{
+    struct addrinfo hints;
+    struct addrinfo *result, *rp;
+    int sfd,cfd;
+    struct sockaddr_storage peer_addr;
+    socklen_t peer_addr_len;
+    ssize_t nread;
+    char buf[BUF_SIZE];
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
+    hints.ai_socktype = SOCK_STREAM; /*  socket */
+    hints.ai_flags = AI_PASSIVE;    /* For wildcard IP address */
+    hints.ai_protocol = 0;          /* Any protocol */
+    hints.ai_canonname = NULL;
+    hints.ai_addr = NULL;
+    hints.ai_next = NULL;
+
+    getaddrinfo(argv[1], argv[2], &hints, &result);
+    sfd = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    bind(sfd, result->ai_addr, result->ai_addrlen);
+     //   close(sfd);
+
+    freeaddrinfo(result);           /* No longer needed */
+    listen(sfd, 5);
+
+ 
+    while (1) {
+        char host[NI_MAXHOST], service[NI_MAXSERV];
+        peer_addr_len = sizeof(peer_addr);
+        cfd = accept(sfd, (struct sockaddr *) &peer_addr,&peer_addr_len);
+        getnameinfo((struct sockaddr *) &peer_addr, peer_addr_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST);
+        printf("Received from %s:%s\n", host, service);
+        nread = recv(cfd, buf, BUF_SIZE, 0);
+        send(cfd, buf, nread, 0);
+    }
+    close(cfd);
+    close(sfd);
+    return 0;
+ }
