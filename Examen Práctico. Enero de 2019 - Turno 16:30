@@ -1,0 +1,26 @@
+2.kill -SIGINT 1943
+#include <signal.h>
+#include <stdio.h>
+
+int signstpcount=0;
+int signintcount=0;
+
+void handler(int signo){
+    if(signo==SIGINT)
+    signstpcount++;
+    if(signo==SIGTSTP)
+    signintcount++;
+
+}
+int main(){
+    printf("soy%d\n",getpid());
+    signal(SIGINT,handler);
+    signal(SIGTSTP,handler);
+    int total=0;
+    while(total<10){
+        total=signstpcount+signintcount;
+    }
+
+    printf("somos%d",total);
+    return 0;
+}
