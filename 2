@@ -5,86 +5,62 @@ Entonces permanecerá bloqueado esperando la confirmación por parte del hijo en
 El hijo leerá de la tubería p_h, escribirá el mensaje por la salida estándar y esperará 1 segundo. 
 Entonces, enviará el carácter ‘l’ al proceso padre, escribiéndolo en la tubería h_p, para indicar que está listo. 
 Después de 10 mensajes enviará el carácter ‘q’ para indicar al padre que finalice.*/
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <string.h>
 
-#define MESSAGE_SIZE 100
 
-int main() {
-    int p_h[2]; // Tubería del padre al hijo
-    int h_p[2]; // Tubería del hijo al padre
 
-    // Crear las tuberías
+int main(int argc, char *argv[]){
+    
+    char buf;
+    int p_h[2];
+    int h_p[2];
+    pid_t cpid;
     pipe(p_h);
     pipe(h_p);
+    cpid=fork();
 
-    pid_t pid = fork();
-
-   
-    /*El hijo leerá de la tubería p_h, escribirá el mensaje por la salida estándar y esperará 1 segundo. 
-    Entonces, enviará el carácter ‘l’ al proceso padre, escribiéndolo en la tubería h_p, para indicar que está listo. 
-    Después de 10 mensajes enviará el carácter ‘q’ para indicar al padre que finalice.
-*/
-    if (pid == 0) {  // Proceso hijo
-        close(p_h[1]);  // Cerrar el extremo de escritura de la tubería p_h
-        close(h_p[0]);  // Cerrar el extremo de lectura de la tubería h_p
-
-        char message[MESSAGE_SIZE];
-
-        for (int i = 0; i < 10; ++i) {
-            // Leer el mensaje de la tubería p_h
-            ssize_t bytes_read = read(p_h[0], message, MESSAGE_SIZE);
-
-            // Escribir el mensaje en la salida estándar
-            write(STDOUT_FILENO, message, bytes_read);
-
-            // Esperar 1 segundo
+    if (cpid==0){
+         char message[100];
+        close(p_h[1]);
+        close(h_p[0]);
+        int mensaje=0;
+        while (mensaje<10){
+            ssize_t bytes=read(p_h[0], message, sizeof(message));
+            write(STDOUT_FILENO,message, bytes);
             sleep(1);
-
-            // Enviar el carácter 'l' al proceso padre a través de la tubería h_p
-            write(h_p[1], "l", 1);
+            write(h_p[1], "1", 1);
+            mensaje++;
         }
+         write(h_p[1], "q", 1);
 
-        write(h_p[1], "q", 1);
-
-        // Cerrar descriptores no necesarios
         close(p_h[0]);
         close(h_p[1]);
 
-        exit(EXIT_SUCCESS);
+        _exit(EXIT_SUCCESS);
+
     }
-    /*El padre leerá de la entrada estándar (terminal) y enviará el mensaje al proceso hijo, escribiéndolo en la tubería p_h. 
-    Entonces permanecerá bloqueado esperando la confirmación por parte del hijo en la otra tubería, h_p.*/ 
-    else {  // Proceso padre
-        close(p_h[0]);  // Cerrar el extremo de lectura de la tubería p_h
-        close(h_p[1]);  // Cerrar el extremo de escritura de la tubería h_p
-
-        char message[MESSAGE_SIZE];
-        // Leer de la entrada estándar
-        ssize_t bytes_read = read(STDIN_FILENO, message, MESSAGE_SIZE);
-        
-        // Escribir el mensaje en la tubería p_h
-        write(p_h[1], message, bytes_read);
-
-        // Esperar la confirmación del hijo a través de la tubería h_p
-        char confirmation='MARIA';
-        while(confirmation!='q'){
-            read(h_p[0], &confirmation, 1);
+    else{
+        close(p_h[0]);
+        close(h_p[1]);
+        char message[100];
+        char ge='-';
+        while(ge!='q')
+        {
+            ssize_t bytes=read(STDIN_FILENO, message, sizeof(message));
+            write(p_h[1], message, sizeof(message));
+            read(h_p[0], &ge, 1);
         }
 
-        // Cerrar descriptores no necesarios
         close(p_h[1]);
         close(h_p[0]);
-
-        // Esperar al hijo para evitar procesos huérfanos
-        wait(NULL);
-
+        wait(NULL);                /* Wait for child */
         exit(EXIT_SUCCESS);
+
     }
 
-    return 0;
 }
