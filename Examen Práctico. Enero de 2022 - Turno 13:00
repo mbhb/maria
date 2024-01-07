@@ -51,3 +51,65 @@ int main(int argc, char *argv[]){
     close(sfd);
 }
 VERSION 2:
+#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+#define BUF_SIZE 500
+
+int main(int argc, char *argv[]) {
+    struct addrinfo hints;
+    struct addrinfo *result;
+    int sfd, cfd;
+    struct sockaddr_storage peer_addr;
+    socklen_t peer_addr_len;
+    int nread;
+    char buf[BUF_SIZE];
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
+    hints.ai_socktype = SOCK_STREAM; /* socket */
+    hints.ai_flags = AI_PASSIVE;    /* For wildcard IP address */
+    hints.ai_protocol = 0;          /* Any protocol */
+    hints.ai_canonname = NULL;
+    hints.ai_addr = NULL;
+    hints.ai_next = NULL;
+
+    getaddrinfo(argv[1], argv[2], &hints, &result);
+    sfd = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    bind(sfd, result->ai_addr, result->ai_addrlen);
+    freeaddrinfo(result);           /* No longer needed */
+    listen(sfd, 5);
+
+    while (1) {
+        peer_addr_len = sizeof(peer_addr);
+        cfd = accept(sfd, (struct sockaddr *) &peer_addr, &peer_addr_len);
+        char host[NI_MAXHOST], service[NI_MAXSERV];
+        getnameinfo((struct sockaddr *) &peer_addr, peer_addr_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST);
+        printf("Received connection from %s:%s\n", host, service);
+
+        while (1) {
+            nread = recv(cfd, buf, BUF_SIZE, 0);
+            if (nread <= 0) {
+                // Si el cliente cierra la conexión, salimos del bucle interno
+                printf("Client disconnected\n");
+                break;
+            }
+
+            printf("Received message: %.*s\n", nread, buf);
+
+            // Aquí puedes procesar el mensaje o simplemente enviar la dirección del cliente de vuelta
+            send(cfd, host, strlen(host), 0);
+        }
+
+        close(cfd);
+    }
+
+    close(sfd);
+    return 0;
+}
+
