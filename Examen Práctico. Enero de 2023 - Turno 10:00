@@ -1,4 +1,4 @@
-2.
+2. EL WC NO ME VA NI AHÍ NI EN LA MAQUINA PERO CON OTROS COMANDOS SÍ?
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdio.h>
