@@ -57,3 +57,76 @@ main(int argc, char *argv[])
     }
     close(sfd);
 }
+3.
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/select.h>
+
+#define BUFFER_SIZE 256
+
+int main(){
+    mkfifo("t1", 0777);
+    mkfifo("t2", 0777);
+    int fd1 = open("t1", O_RDONLY | O_NONBLOCK);
+    int fd2 = open("t2", O_RDONLY | O_NONBLOCK);
+
+    // Descriptor para el conjunto de descriptores de archivos
+    fd_set readfds;
+
+    while(1){
+        // Limpiar y configurar el conjunto de descriptores de archivos
+        FD_ZERO(&readfds);
+        FD_SET(fd1, &readfds);
+        FD_SET(fd2, &readfds);
+
+        // Configurar el valor más alto del descriptor de archivos
+        int maxfd = (fd1 > fd2) ? fd1 : fd2;
+
+        // Esperar hasta que haya datos listos para leer en alguna de las tuberías
+        select(maxfd + 1, &readfds, NULL, NULL, NULL);
+
+        // Verificar si hay datos listos para leer en la primera tubería
+        if (FD_ISSET(fd1, &readfds)) {
+            char buffer[BUFFER_SIZE];
+            ssize_t bytesRead = read(fd1, buffer, BUFFER_SIZE);
+
+            if (bytesRead > 0) {
+                buffer[bytesRead] = '\0';
+                printf("Leyendo de t1: %s\n", buffer);
+            } else if (bytesRead == 0) {
+                // El escritor ha cerrado la tubería, cerrar y volver a abrir
+                close(fd1);
+                fd1 = open("t1", O_RDONLY | O_NONBLOCK);
+            }
+        }
+
+        // Verificar si hay datos listos para leer en la segunda tubería
+        if (FD_ISSET(fd2, &readfds)) {
+            char buffer[BUFFER_SIZE];
+            ssize_t bytesRead = read(fd2, buffer, BUFFER_SIZE);
+
+            if (bytesRead > 0) {
+                buffer[bytesRead] = '\0';
+                printf("Leyendo de t2: %s\n", buffer);
+            } else if (bytesRead == 0) {
+                // El escritor ha cerrado la tubería, cerrar y volver a abrir
+                close(fd2);
+                fd2 = open("t2", O_RDONLY | O_NONBLOCK);
+            }
+        }
+
+        // Pequeño retraso para evitar uso intensivo de CPU
+        usleep(10000); // 10 milisegundos
+    }
+
+    // Nunca deberíamos llegar aquí en un bucle infinito
+    // Pero cerramos las tuberías y salimos del programa
+    close(fd1);
+    close(fd2);
+
+    return 0;
+}
