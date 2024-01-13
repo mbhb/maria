@@ -36,3 +36,36 @@ int main() {
    
    return 1;
 }
+o
+#include <signal.h>
+#include <stdio.h>
+#include <stddef.h>
+#include <unistd.h>
+
+int main(){
+    sigset_t set;
+    sigemptyset(&set);
+    sigaddset(&set,SIGINT);
+    sigaddset(&set,SIGTSTP);
+    sigprocmask(SIG_BLOCK, &set,NULL);
+
+    sleep(20);
+    sigset_t pendientes;
+    sigemptyset(&pendientes);
+    sigpending(&pendientes);
+    if(sigismember(&set,SIGINT)==1){
+        printf("Llego la señal SIGINT\n");
+    }
+
+    if(sigismember(&pendientes,SIGTSTP)==1){
+        printf("Llego la señal SIGTSTP\n");
+        sigset_t uset;
+        sigemptyset(&uset);
+        sigaddset(&uset,SIGTSTP);
+        sigprocmask(SIG_UNBLOCK, &set,NULL);
+    }
+
+
+    sigprocmask(SIG_UNBLOCK, &set,NULL);
+    return 0;
+}
