@@ -84,7 +84,7 @@ int main(int argc, char *argv[]){
     if (cpid==0){
         printf("hijo\n");
         close(pipefd[1]);
-        dup2(STDIN_FILENO, pipefd[0]);
+        dup2(pipefd[0],0);
         execvp(c2[0],c2);
         close(pipefd[0]);
         _exit(EXIT_SUCCESS);
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
     else{
         printf("papa\n");
         close(pipefd[0]);
-        dup2(STDIN_FILENO, pipefd[1]);
+        dup2(pipefd[1],1);
         execvp(c1[0],c1);
         close(pipefd[1]);
         wait(NULL);                /* Wait for child */
