@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 
     // Configurar la acción para la señal SIGUSR1
     struct sigaction sigact;
-    alarm(atoi(argv[1]));  // Establecer una alarma para el tiempo especificado
+    alarm(atoi(argv[2]));  // Establecer una alarma para el tiempo especificado
     signal(SIGALRM, handler);  // Configurar el manejador de señales para SIGALRM
     sigaction(SIGUSR1, NULL, &sigact);
     sigact.sa_handler = handler;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         printf("Se va a borrar el ejecutable\n");
 
         // Borrar el ejecutable (eliminar el archivo)
-        unlink(argv[0]);
+        unlink(argv[1]);
         return 0;
     } else {
         printf("No se va a borrar el ejecutable\n");
