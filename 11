@@ -2,46 +2,37 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sched.h>
 
-// Manejador de señales
-void signal_handler(int signo) {
-    if (signo == SIGINT) {
-        printf("Se recibió la señal SIGINT.\n");
-    } else if (signo == SIGTSTP) {
-        printf("Se recibió la señal SIGTSTP.\n");
-
-        // Desbloquear SIGTSTP
-        signal(SIGTSTP, SIG_DFL);
-        raise(SIGTSTP); // Reenviar la señal para suspender
-    }
-}
-
+//primero hay que exportar la variable de entorno export SLEEP_SECS=50
 int main() {
-    // Definir un conjunto de señales y bloquearlas
-    sigset_t set;
-    sigemptyset(&set); // Inicializa un conjunto de señales vacío
-    sigaddset(&set, SIGINT); // Agrega SIGINT al conjunto
-    sigaddset(&set, SIGTSTP); // Agrega SIGTSTP al conjunto
-    sigprocmask(SIG_BLOCK, &set, NULL); // Bloquea las señales definidas en el conjunto
-
-    // Obtener el número de segundos de la variable de entorno SLEEP_SECS
-    char *sleep_secs_env = getenv("SLEEP_SECS");
-    if (sleep_secs_env == NULL) {
-        printf("Variable de entorno SLEEP_SECS no encontrada. Usando 5 segundos por defecto.\n");
-        sleep(5);
-    } else {
-        int sleep_secs = atoi(sleep_secs_env);
-        sleep(sleep_secs);
+    
+    sigset_t blk_set;
+    sigemptyset(&blk_set);
+    sigaddset(&blk_set,SIGINT );
+    sigaddset(&blk_set,SIGTSTP );
+    sigprocmask(SIG_BLOCK, &blk_set,NULL);
+    
+   char * cc=getenv("SLEEP_SECS");
+    int i=atoi(cc);
+    printf("El programa entrara en suspension %i segundos\n",i);
+    sleep(i);
+    sigset_t pendientes;
+    sigemptyset(&pendientes);
+    sigpending(&pendientes);
+    if(sigismember(&pendientes,SIGINT)==1){
+        printf("Llego la señal SIGINT\n");
     }
-
-    // Configurar manejadores de señales para SIGINT y SIGTSTP
-    signal(SIGINT, signal_handler);
-    signal(SIGTSTP, signal_handler);
-
-    printf("El proceso ha despertado.\n");
-
-    // Realizar alguna tarea adicional si es necesario
-
-    // Terminar el programa
-    return 0;
+    if(sigismember(&pendientes,SIGTSTP)==1){
+        printf("Llego la señal SIGTSTP\n");
+        sigset_t blk_set2;
+        sigemptyset(&blk_set2);
+        sigaddset(&blk_set2,SIGTSTP );
+        sigprocmask(SIG_UNBLOCK,&blk_set2,NULL);
+        printf("SE REANUDO LA EJECUCIÓN\n");
+       return 0;
+    }
+    sigprocmask(SIG_UNBLOCK,&blk_set,NULL);
+   
+   return 1;
 }
