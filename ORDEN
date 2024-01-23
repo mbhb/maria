@@ -1,0 +1,80 @@
+#include <vector>
+#include <iostream>
+#include <limits.h>
+#include <fstream>
+using namespace std;
+
+//{ex. k : k nat : v.size() = 2^k && p.t. i : 0 <= i < v.size() : v[i] > 0
+//  && 0 <= ini < v.size() && 0 = fin < v.size() && ex. k : k nat : fin - ini = 2^k} //No hace falta ini <= fin porque en caso contrario fin-ini es negativo y no podria ser potencia de 2
+//fun ordenado(V[1, ..., v.size()) de ent, ini: ent, fin: ent) dev: min: ent, max: ent, ordenado: bool
+bool ordenado(int ini, int fin, int& min, int& max, vector<int> v) {
+	//t(v, ini, fin) = fin - ini
+	if (fin - ini == 0) { //Caso Base 0 return true 
+		min = max = v[ini];
+		return true;
+	}
+	if (fin - ini == 1) { //Caso Base 1
+		if (v[ini] > v[fin]) {
+			return false;
+		}
+		else {
+			min = v[ini];
+			max = v[fin];
+			return true;
+		}
+	}
+	else { // Caso recursivo
+		int mitad = (fin + ini) / 2;
+		int maxl;
+		int minr;
+		int minl;
+		int maxr;
+		if (!ordenado(ini, mitad, minl, maxl, v) || !ordenado(mitad + 1, fin, minr, maxr, v)) {
+			return false;
+		}
+		else {
+			if (minl > minr || maxr < maxl) {
+				return false;
+			}
+			else {
+				min = minl;
+				max = maxr;
+				return true;
+			}
+		}
+
+	}
+}
+//ordenado(ini, fin) <=> el subvector v[ini], ..., v[fin] esta parcialmente ordenado
+// ordenado(ini, (fin + ini )/2) && ordenado((ini + fin)/2 + 1, fin) => (min = min i: ini <= i <= fin : v[i] && max = max i : ini <= i <= fin : v[i])
+//Cuando el vector no esta ordenado, la funcion no asegura que los valores min y max que devuelve sean correctos (lo cual no tiene importancia, pero hay
+//reflejarlo en la postcondicion
+bool resuelveCaso() {
+	vector <int> v;
+	int aux;
+	cin >> aux;
+	if (aux == 0) {
+		return false;
+	}
+	else {
+		v.push_back(aux);
+		cin >> aux;
+		while (aux != 0) {
+			v.push_back(aux);
+			cin >> aux;
+		}
+		int p;
+		if (ordenado(0, v.size() - 1, p, p, v)) {
+			cout << "SI\n";
+		}
+		else {
+			cout << "NO\n";
+		}
+		return true;
+	}
+}
+
+int main() {
+	while (resuelveCaso());
+	return 0;
+}
