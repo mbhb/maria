@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int merge(vector<int> &v, int ini, int mitad, int fin) {
+	int ut = 0;
+	int izq = ini;
+	int der = mitad;
+	while ((izq <= mitad - 1) && (der <= fin)) {
+		if (v[izq] < v[der]) {
+			izq++;
+		}
+		else {
+			der++;
+			ut += mitad - izq;
+		}
+	}
+	return ut;
+}
+
+int mergeSort(vector<int> &v, int ini, int fin) {
+	int mitad = (ini + fin) / 2;
+	int ut = 0;
+	if (fin > ini) {
+		ut += mergeSort(v, ini, mitad);
+		ut += mergeSort(v, mitad + 1, fin);
+		ut += merge(v, ini, mitad + 1, fin);
+	}
+	return ut;
+}
+
+bool resuelveCaso() {
+	if (!std::cin) // fin de la entrada
+		return false;
+	else {
+		int n, aux;
+		vector<int> v;
+		cin >> n;
+		for(int i = 0; i < n; i++){
+			cin >> aux;
+			v.push_back(aux);
+		}
+		cout << mergeSort(v, 0, v.size() - 1) << endl;;
+	}
+	return true;
+}
+int main() {
+	while (resuelveCaso());
+	return 0;
+}
