@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+/*
+ Recursion final
+ O(N) = log(N)
+ t(fin, ini) = fin - ini
+ {(# i : 0 <= i < N : !hayPares(v, i)) = 1 && 0 <= ini <= fin < N}
+ func resolver(v[0, ...,N) de ent, ini ent, fin ent) dev r ent
+ {0 <= i< N &&!hayPares(v, i))}
+ hayPares(v, i) := 0 <= i < N && (# j : 0 <= j < N : v[j] = v[i]) == 2 && ((0 < i &&c v[i - 1] = v[i])||(i < N - 1 &&c v[i] == v[i + 1]))
+*/
+int resolver(vector<int> v, int ini, int fin) {
+	int mitad = (ini + fin) / 2;
+	// c.b. (return ini)
+	if(fin - ini == 0){
+		return ini;
+	}
+	// c.b. (return mitad)
+	else if ((v[mitad -1] != v[mitad]) && (v[mitad] != v[mitad + 1])){
+		return mitad;
+	}
+	// c. r.
+	else if (mitad % 2 == 0) {
+		if ((v[mitad - 1] == v[mitad])) {
+			return resolver(v, ini, mitad - 2);
+		}
+		else {
+			return resolver(v, mitad + 1, fin);
+		}
+	}
+	else {
+		if ((v[mitad - 1] == v[mitad])) {
+			return resolver(v, mitad + 1, fin);
+		}
+		else {
+			return resolver(v, ini, mitad - 1);
+		}
+	}
+}
+
+
+void resuelveCaso() {
+	int n, aux;
+	cin >> n;
+	vector<int> v;
+	for (int i = 0; i < n; i++) {
+		cin >> aux;
+		v.push_back(aux);
+	}
+	cout << resolver(v, 0, v.size() - 1) << endl;
+}
+int main() {
+	int numCasos;
+	std::cin >> numCasos;
+	for (int i = 0; i < numCasos; ++i)
+		resuelveCaso();
+	return 0;
+}
