@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int nReinas;
+
+bool validSol(vector<int>& v, vector<bool>& diagsDesc, vector<bool>& diagsAscen, vector<bool>& filas, int num) {
+	return filas[num] && diagsAscen[num + v.size()] && diagsDesc[num - v.size() + nReinas - 1];
+}
+
+ int backTracking(vector<int>& v, vector<bool>& diagsDesc, vector<bool>& diagsAscen, vector<bool>& filas) {
+	 if (v.size() == nReinas) {
+		 return 1;
+	 }
+	 else {
+		 int posibles = 0;
+		 for (int i = 0; i < nReinas; i++) {
+			 if (validSol(v, diagsDesc, diagsAscen, filas, i)) {
+				 v.push_back(i);
+				 filas[i] = false;
+				 diagsAscen[i + v.size() - 1] = false;
+				 diagsDesc[i - v.size() + 1 + nReinas - 1] = false;
+				 posibles += backTracking(v, diagsDesc, diagsAscen, filas);
+				 v.pop_back();
+				 filas[i] = true;
+				 diagsAscen[i + v.size()] = true;
+				 diagsDesc[i - v.size() + nReinas - 1] = true;
+			 }
+		 }
+		 return posibles;
+	 }
+}
+
+void resuelveCaso() {
+	cin >> nReinas;
+	vector<int> v;
+	vector<bool> diagsDesc, diagsAscen, filas;
+	for (int i = 0; i < 2 * nReinas - 1; i++) {
+		diagsDesc.push_back(true);
+		diagsAscen.push_back(true);
+	}
+	for (int i = 0; i < nReinas; i++)
+		filas.push_back(true);
+	cout << backTracking(v, diagsDesc, diagsAscen, filas) << '\n';
+}
+
+int main() {
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		resuelveCaso();
+	return 0;
+}
