@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void printTorre(const vector<int> &torre) {
+	for (int i = 0; i < torre.size(); i++) {
+		if (i == torre.size() - 1) {
+			if (torre[i] == 0) {
+				cout << "azul";
+			}
+			else if (torre[i] == 1) {
+				cout << "rojo";
+			}
+			else {
+				cout << "verde";
+			}
+		}
+		else {
+			if (torre[i] == 0) {
+				cout << "azul ";
+			}
+			else if (torre[i] == 1) {
+				cout << "rojo ";
+			}
+			else {
+				cout << "verde ";
+			}
+		}
+	}
+	cout << endl;
+}
+
+void vueltaAtras(int n, int nivel, vector<int> &avcolors, vector<int> &usedColors, vector<int> &torre, bool &hayAlguien) {
+	for (int i = 0; i < 3; i++) {
+		if (avcolors[i] > 0) {
+			torre.push_back(i);
+			avcolors[i]--;
+			usedColors[i]++;
+			if (!((torre[nivel - 1] == i && i == 2) || usedColors[2] > usedColors[0])) {
+				if (nivel != n - 1) {
+					vueltaAtras(n, nivel + 1, avcolors, usedColors, torre, hayAlguien);
+				}
+				else {
+					if ((usedColors[1] > usedColors[0] + usedColors[2])) {
+						printTorre(torre);
+						hayAlguien = true;
+					}
+				}
+			}
+			torre.erase(torre.begin() + nivel);
+			avcolors[i]++;
+			usedColors[i]--;
+		}
+	}
+}
+
+
+bool resuelveCaso() {
+	int n, azul, rojo, verde;
+	cin >> n >> azul >> rojo >> verde;
+	if (n == 0 && azul == 0 && rojo == 0 && verde == 0)
+		return false;
+	else {
+		vector<int> colors;
+		vector<int> torre;
+		vector<int> usedColors(3, 0);
+		bool hayAlguien = false;
+		colors.push_back(azul);
+		colors.push_back(rojo);
+		colors.push_back(verde);
+		torre.push_back(1);
+		usedColors[1] = 1;
+		colors[1]--;
+		vueltaAtras(n, 1, colors, usedColors, torre, hayAlguien);
+		if (rojo == 0 || !hayAlguien) {
+			cout << "SIN SOLUCION" << endl;
+		}
+	}
+		return true;
+}
+int main() {
+	while (resuelveCaso());
+	return 0;
+}
