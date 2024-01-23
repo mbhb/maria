@@ -1,0 +1,92 @@
+# Configuración de Interfaces de Red
+
+# Activar interfaz
+ip link set dev enp0s3 up
+
+# Asignar dirección IP
+ip address add 10.0.0.1/24 dev enp0s3
+
+# Configurar rutas
+ip route add default via 10.0.0.1
+ip route add 10.0.0.0/24 via 10.0.0.1
+
+# Activación del reenvío de paquetes
+sysctl net.ipv4.ip_forward=1
+sysctl net.ipv6.conf.all.forwarding=1
+
+# Configuración de DHCP
+# Editar /etc/dhcp/dhcpd.conf
+cat <<EOF > /etc/dhcp/dhcpd.conf
+subnet 10.0.0.0 netmask 255.255.255.0 {
+    range 10.0.0.11 10.0.0.50;
+    option routers 10.0.0.3;
+    option broadcast-address 10.0.0.255;
+}
+EOF
+
+# Iniciar DHCP
+systemctl start isc-dhcp-server
+dhclient -d enp0s3
+
+# Configuración de IPTABLES
+iptables -P INPUT DROP
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -s 200.1.1.1 -p tcp --dport 22 -m state --state NEW -j ACCEPT
+iptables -t nat -A POSTROUTING -o enp0s3 -j SNAT --to 175.20.12.1
+iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+iptables -t nat -A PREROUTING -d 175.20.12.1 -p tcp --dport 80 -j DNAT --to 192.168.1.1:80
+
+# Configuración del Servidor DNS
+# Editar /etc/bind/named.conf
+cat <<EOF > /etc/bind/named.conf
+zone "example.com." {
+    type master;
+    file "/etc/bind/example.com";
+};
+EOF
+
+# Comprobar y iniciar DNS
+named-checkconf
+named-checkzone
+systemctl start named
+
+# Configuración Cliente DNS
+# Editar /etc/resolv.conf
+echo "nameserver <dirección IP del servidor DNS>" > /etc/resolv.conf
+
+# Configuración de Anuncio de Prefijos IPv6
+# Editar /etc/frr/frr.conf
+cat <<EOF > /etc/frr/frr.conf
+interface enp0s3
+no ipv6 nd suppress-ra
+ipv6 nd prefix fd00:0:0:a::/64
+EOF
+
+# Iniciar FRR para IPv6
+systemctl start frr
+
+# Configuración de RIP
+# Editar /etc/frr/frr.conf para RIP
+echo "router rip" >> /etc/frr/frr.conf
+echo "version 2" >> /etc/frr/frr.conf
+echo "network enp0s3" >> /etc/frr/frr.conf
+
+# Activar RIP y reiniciar FRR
+systemctl restart frr
+
+# Configuración de BGP
+# Editar /etc/frr/frr.conf para BGP
+cat <<EOF >> /etc/frr/frr.conf
+router bgp 100
+bgp router-id 0.0.0.1
+no bgp network import-check
+no bgp ebgp-requires-policy
+neighbor 2001:db8:200:1::2 remote-as 200
+address-family ipv6
+network 2001:db8:100::/47
+neighbor 2001:db8:200:1::2 activate
+exit-address-family
+EOF
+
+# Activar BGP y reiniciar FRR
+systemctl restart frr
