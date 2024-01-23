@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int nReinas;
+int nTorres;
+int actTorres;
+int actReinas;
+
+
+typedef struct{
+	int i;
+	int j;
+}tPar;
+
+bool valido(vector<int>& v, bool esTorre, vector<bool>& diagsDesc, vector<bool>& diagsAscen, vector<bool>& filas, int num, vector<tPar>& prohibidos) {
+	for (int i = 0; i < prohibidos.size(); i++) {
+		if (prohibidos[i].j == num && prohibidos[i].i == v.size())
+			return false;
+	}
+	if (esTorre) {
+		return filas[num] && diagsAscen[num + v.size()] && diagsDesc[num - v.size() + nReinas + nTorres - 1] && actTorres < nTorres;
+	}
+	else {
+		return filas[num] && diagsAscen[num + v.size()] && diagsDesc[num - v.size() + nReinas + nTorres - 1] && actReinas < nReinas;
+	}
+}
+
+int backTrack(vector<int>& v, vector<bool>& filas, vector<bool>& diagsDesc, vector<bool>& diagsAscen, vector<tPar>& prohibidos) {
+	if (v.size() == nTorres + nReinas) {
+		return 1;
+	}
+	else {
+		int posibles = 0;
+		for (int i = 0; i < nTorres + nReinas; i++) {
+			if (valido(v, true, diagsDesc, diagsAscen, filas, i, prohibidos)) {
+				v.push_back(i); //Meto una ficha (una torre)
+				filas[i] = false;
+				actTorres++;
+				posibles += backTrack(v, filas, diagsDesc, diagsAscen, prohibidos);
+				v.pop_back();
+				filas[i] = true;
+				actTorres--;
+			}
+			if (valido(v, false, diagsDesc, diagsAscen, filas, i, prohibidos)) {
+				v.push_back(i);
+				filas[i] = false;
+				diagsAscen[i + v.size() - 1] = diagsDesc[i - v.size() + 1 + nReinas + nTorres - 1] = false;
+				actReinas++;
+				posibles += backTrack(v, filas, diagsDesc, diagsAscen, prohibidos);
+				v.pop_back();
+				filas[i] = true;
+				diagsAscen[i + v.size()] = diagsDesc[i - v.size() + nReinas + nTorres - 1] = true;
+				actReinas--;
+			}
+		}
+		return posibles;
+	}
+}
+
+bool resuelveCaso() {
+	cin >> nTorres;
+	cin >> nReinas;
+	actReinas = actTorres = 0;
+	vector<int> v;
+	vector<bool> diagsDesc, diagsAscen, filas;
+	vector<tPar> prohibidos;
+	for (int i = 0; i < 2 * (nTorres + nReinas) - 1; i++) {
+		diagsAscen.push_back(true);
+		diagsDesc.push_back(true);
+	}
+	for (int i = 0; i < nReinas + nTorres; i++)
+		filas.push_back(true);
+	int aux;
+	cin >> aux;
+	tPar par;
+	for (int i = 0; i < aux; i++) {
+		cin >> par.i;
+		cin >> par.j;
+		prohibidos.push_back(par);
+	}
+	if (!std::cin) // fin de la entrada
+		return false;
+	cout << backTrack(v, filas, diagsDesc, diagsAscen, prohibidos) << '\n';
+		return true;
+}
+
+int main() {
+	while (resuelveCaso());
+	return 0;
+}
