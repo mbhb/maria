@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+typedef struct {
+	int picos;
+	int valles;
+}tDev;
+using namespace std;
+void resuelveCaso();
+tDev analiza(vector<int> v, int n);
+
+
+int main() {
+	int numCasos;
+	std::cin >> numCasos;
+	for (int i = 0; i < numCasos; ++i)
+		resuelveCaso();
+	return 0;
+}
+void resuelveCaso() {
+	vector<int> v;
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		int aux;
+		cin >> aux;
+		v.push_back(aux);
+	}
+	tDev salida = analiza(v, n);
+	cout << salida.picos << " " << salida.valles << "\n";
+
+}
+//{0 < n <= 10.000 && p.t. i : 0 <= i < n : -274 < v[i] < 1.000}
+tDev analiza(vector<int> v, int n) {
+	tDev salida = { 0, 0 };
+	//Funcion de cota: N - i
+	//INV: {salida.picos == # j : 0 < j < i - 1 : (v[j - 1] < v[j] && v[j + 1] < v[j]) &&
+	//      salida.valles == # j : 0 < j < i - 1 : (v[j - 1] > v[j] && v[j + 1] > v[j])}
+	for (int i = 1; i < n - 1; i++) {
+		if (v[i - 1] < v[i] && v[i + 1] < v[i]) {
+			salida.picos++;
+		}
+		if (v[i - 1] > v[i] && v[i + 1] > v[i]) {
+			salida.valles++;
+		}
+	}
+	return salida;
+}
+//{salida.picos == # i : 0 < i < N - 1 : (v[i - 1] < v[i] && v[i + 1] < v[i]) &&
+// salida.valles == # i : 0 < i < N - 1 : (v[i - 1] > v[i] && v[i + 1] > v[i])}
