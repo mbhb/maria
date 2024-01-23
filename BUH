@@ -1,0 +1,75 @@
+#include <iostream>
+using namespace std;
+
+//{n >= 1} Sea BUH(n) la palabra de correspondiente al n-�simo ni�o
+long long int l(long long int n) {
+	//t(n) = n;
+	//Caso Base: l(1) = 3;
+	if (n == 1) {
+		return 3;
+	}
+	//Caso Recursivo: l(n) = 2 + n + 2*l(n - 1) p.t. n >= 1
+	else {
+		return 2 + n + 2 * l(n - 1);
+	}
+}
+//l(n) = longitud de la palabra BUH(n)}
+
+//{l(n) <= 10^18 && 1 <= k <= l(n)}
+char charAt(long long int n, long long int k) {
+	//t(n) = n
+	//Casos Base: charAt(1, 1) == B, chatAt(1, 2) == U; charAt(1, 3) == H
+	//  charAt(n, l(n - 1) + 1) == B p.t. 1 < n
+	//  charAt(n, k) == U p.t. 1 < n && p.t. l(n - 1) + 1 < k < l(n - 1) +2 + n
+	//  charAt(n, l(n - 1) + 2 + n) == H p.t. 1 < n
+	if (n == 1) {
+		switch (k) {
+		case 1: return 'B'; //charAt(1, 1) == B
+			break;
+		case 2: return 'U'; //charAt(1, 2) == U
+			break;
+		case 3: return 'H'; // charAt(1, 3) == H
+		}
+	}
+	else {
+		//Caso recursivo:
+		//  charAt(n, k) == charAt(n - 1, k) p.t. 1 < n && p.t. 1 <= k <= l(n - 1)
+		//  charAt(n, k) == charAt(n - 1, k - l(n - 1) - 2 - n) p.t. 1 < n && p.t. l(n - 1) + 2 + n < k
+		long long int lenght = l(n - 1);
+		if (k <= lenght) {
+			return charAt(n - 1, k);
+		}
+		else if (lenght < k && k <= lenght + 2 + n) {
+			if (k == lenght + 1) {
+				return 'B';
+			}
+			else if (k == lenght + 2 + n) {
+				return 'H';
+			}
+			else {
+				return 'U';
+			}
+		}
+		else {
+			return charAt(n - 1, k - lenght - 2 - n);
+		}
+	}
+}
+//{charAt(n, k) == BUH(n)[k - 1]}
+bool resuelveCaso() {
+	long long int n, k;
+	cin >> n;
+	cin >> k;
+	if (!std::cin) {
+		return false;
+	}
+	char sol = charAt(n, k);
+	cout << sol << endl;
+	return true;
+}
+
+
+int main() {
+	while (resuelveCaso());
+	return 0;
+}
