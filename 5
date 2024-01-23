@@ -1,13 +1,3 @@
-/*Ejercicio 5. Crear otra tubería con nombre. Escribir un programa que espere hasta que haya datos listos para leer en alguna de 
-ellas. El programa debe mostrar la tubería desde la que leyó y los datos leídos. 
-Consideraciones: 
-1. Para optimizar las operaciones de lectura usar un buffer (ej. de 256 bytes).
-2. Usar read(2) para leer de la tubería y gestionar adecuadamente la longitud de los datos leídos.
-3.Normalmente, la apertura de la tubería para lectura se bloqueará hasta que se abra para escritura (ej. con echo 1 > tuberia). 
-Para evitarlo, usar la opción O_NONBLOCK en open(2).
-4 y 5. Cuando el escritor termina y cierra la tubería, read(2) devolverá 0, indicando el fin de fichero, por lo que hay que cerrar 
-la tubería y volver a abrirla. Si no, select(2) considerará el descriptor siempre listo para lectura y no se bloqueará.*/
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
