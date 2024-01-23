@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int resolver(vector<int> v, int ini, int fin, int c) {
+	int mitad = (ini + fin) / 2;
+	if(fin - ini == 0){
+		if (v[ini] == ini + c) {
+			return v[ini];
+		}
+		else {
+			return -1;
+		}
+	}
+	else if (v[mitad] == mitad + c) {
+		return v[mitad];
+	}
+	else if (v[mitad] < mitad + c) {
+		return resolver(v, mitad + 1, fin, c);
+	}
+	else {
+		return resolver(v, ini, mitad - 1, c);
+	}
+
+}
+// Resuelve un caso de prueba, leyendo de la entrada la
+// configuraci�n, y escribiendo la respuesta
+void resuelveCaso() {
+	int n, c, aux;
+	vector<int> v;
+	cin >> n;
+	cin >> c;
+	for (int i = 0; i < n; i++) {
+		cin >> aux;
+		v.push_back(aux);
+	}
+	int sol = resolver(v, 0, v.size() - 1, c);
+	if (sol == -1) {
+		cout << "NO" << endl;
+	}
+	else {
+		cout << sol << endl;
+	}
+}
+int main() {
+	int numCasos;
+	std::cin >> numCasos;
+	for (int i = 0; i < numCasos; ++i)
+		resuelveCaso();
+	return 0;
+}
