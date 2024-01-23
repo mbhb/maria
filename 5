@@ -1,20 +1,20 @@
-int main(){
+#include <stdio.h>
+#include <sys/utsname.h>
+#include <errno.h>
+#include <string.h>
 
-struct utsname buf;
-
-int rc = uname(&buf);
-
-if(rc == -1){
-    printf("ERROR uname()(%d): %s\n", errno, strerror(errno));
-    return -1;
-}
-else {
-    printf ("System name: %s\n", buf.sysname);
-    printf ("Node name: %s\n", buf.nodename);
-    printf ("Release: %s\n", buf.release);
-    printf ("Version: %s\n", buf.version);
-    printf ("Machine: %s\n", buf.machine);
-}
-
-return 1;
+int main() {
+    struct utsname buf;
+    int rc = uname(&buf);
+    if (rc == -1) {
+        printf("ERROR uname()(%d): %s\n", errno, strerror(errno));
+        return -1;
+    } else {
+        printf("System name: %s\n", buf.sysname);
+        printf("Node name: %s\n", buf.nodename);
+        printf("Release: %s\n", buf.release);
+        printf("Version: %s\n", buf.version);
+        printf("Machine: %s\n", buf.machine);
+    }
+    return 1;
 }
