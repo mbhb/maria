@@ -1,0 +1,188 @@
+ubuntu@ubuntu-jammy:~$ ps
+    PID TTY          TIME CMD
+   2162 pts/1    00:00:00 bash
+   2171 pts/1    00:00:00 ps
+ubuntu@ubuntu-jammy:~$ ps aux
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.7 100768  7256 ?        Ss   Nov06   0:02 /sbin/init
+root           2  0.0  0.0      0     0 ?        S    Nov06   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        I<   Nov06   0:00 [rcu_gp]
+root           4  0.0  0.0      0     0 ?        I<   Nov06   0:00 [rcu_par_gp]
+root           5  0.0  0.0      0     0 ?        I<   Nov06   0:00 [slub_flushwq
+root           6  0.0  0.0      0     0 ?        I<   Nov06   0:00 [netns]
+root           8  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kworker/0:0H
+root          10  0.0  0.0      0     0 ?        I<   Nov06   0:00 [mm_percpu_wq
+root          11  0.0  0.0      0     0 ?        S    Nov06   0:00 [rcu_tasks_ru
+root          12  0.0  0.0      0     0 ?        S    Nov06   0:00 [rcu_tasks_tr
+root          13  0.0  0.0      0     0 ?        S    Nov06   0:00 [ksoftirqd/0]
+root          14  0.0  0.0      0     0 ?        I    Nov06   0:05 [rcu_sched]
+root          15  0.0  0.0      0     0 ?        S    Nov06   0:01 [migration/0]
+root          16  0.0  0.0      0     0 ?        S    Nov06   0:00 [idle_inject/
+root          18  0.0  0.0      0     0 ?        S    Nov06   0:00 [cpuhp/0]
+root          19  0.0  0.0      0     0 ?        S    Nov06   0:00 [kdevtmpfs]
+root          20  0.0  0.0      0     0 ?        I<   Nov06   0:00 [inet_frag_wq
+root          21  0.0  0.0      0     0 ?        S    Nov06   0:00 [kauditd]
+root          22  0.0  0.0      0     0 ?        S    Nov06   0:00 [khungtaskd]
+root          23  0.0  0.0      0     0 ?        S    Nov06   0:00 [oom_reaper]
+root          24  0.0  0.0      0     0 ?        I<   Nov06   0:00 [writeback]
+root          25  0.0  0.0      0     0 ?        S    Nov06   0:12 [kcompactd0]
+root          26  0.0  0.0      0     0 ?        SN   Nov06   0:00 [ksmd]
+root          27  0.0  0.0      0     0 ?        SN   Nov06   0:00 [khugepaged]
+root          73  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kintegrityd]
+root          74  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kblockd]
+root          75  0.0  0.0      0     0 ?        I<   Nov06   0:00 [blkcg_punt_b
+root          76  0.0  0.0      0     0 ?        I<   Nov06   0:00 [tpm_dev_wq]
+root          77  0.0  0.0      0     0 ?        I<   Nov06   0:00 [ata_sff]
+root          78  0.0  0.0      0     0 ?        I<   Nov06   0:00 [md]
+root          79  0.0  0.0      0     0 ?        I<   Nov06   0:00 [edac-poller]
+root          80  0.0  0.0      0     0 ?        I<   Nov06   0:00 [devfreq_wq]
+root          81  0.0  0.0      0     0 ?        S    Nov06   0:00 [watchdogd]
+root          83  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kworker/0:1H
+root          85  0.0  0.0      0     0 ?        S    Nov06   0:00 [kswapd0]
+root          86  0.0  0.0      0     0 ?        S    Nov06   0:00 [ecryptfs-kth
+root          88  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kthrotld]
+root          89  0.0  0.0      0     0 ?        I<   Nov06   0:00 [acpi_thermal
+root          91  0.0  0.0      0     0 ?        S    Nov06   0:00 [scsi_eh_0]
+root          92  0.0  0.0      0     0 ?        I<   Nov06   0:00 [scsi_tmf_0]
+root          93  0.0  0.0      0     0 ?        S    Nov06   0:00 [scsi_eh_1]
+root          94  0.0  0.0      0     0 ?        I<   Nov06   0:00 [scsi_tmf_1]
+root          96  0.0  0.0      0     0 ?        I<   Nov06   0:00 [vfio-irqfd-c
+root          98  0.0  0.0      0     0 ?        I<   Nov06   0:00 [mld]
+root          99  0.0  0.0      0     0 ?        I<   Nov06   0:00 [ipv6_addrcon
+root         108  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kstrp]
+root         111  0.0  0.0      0     0 ?        I<   Nov06   0:00 [zswap-shrink
+root         112  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kworker/u3:0
+root         117  0.0  0.0      0     0 ?        I<   Nov06   0:00 [charger_mana
+root         162  0.0  0.0      0     0 ?        I<   Nov06   0:00 [cryptd]
+root         164  0.0  0.0      0     0 ?        I<   Nov06   0:00 [mpt_poll_0]
+root         169  0.0  0.0      0     0 ?        I<   Nov06   0:00 [mpt/0]
+root         189  0.0  0.0      0     0 ?        I    Nov06   0:00 [kworker/0:3-
+root         192  0.0  0.0      0     0 ?        S    Nov06   0:00 [scsi_eh_2]
+root         193  0.0  0.0      0     0 ?        I<   Nov06   0:00 [scsi_tmf_2]
+root         220  0.0  0.0      0     0 ?        I<   Nov06   0:00 [raid5wq]
+root         264  0.0  0.0      0     0 ?        S    Nov06   0:00 [jbd2/sda1-8]
+root         265  0.0  0.0      0     0 ?        I<   Nov06   0:00 [ext4-rsv-con
+root         324  0.0  0.9  47980  9016 ?        S<s  Nov06   0:00 /lib/systemd/
+root         363  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kaluad]
+root         364  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kmpath_rdacd
+root         366  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kmpathd]
+root         367  0.0  0.0      0     0 ?        I<   Nov06   0:00 [kmpath_handl
+root         368  0.0  2.7 354884 27360 ?        SLsl Nov06   0:10 /sbin/multipa
+root         370  0.0  0.4  23532  4820 ?        Ss   Nov06   0:00 /lib/systemd/
+systemd+     408  0.0  0.4  16116  4720 ?        Ss   Nov06   0:00 /lib/systemd/
+root         502  0.0  0.7 237796  6896 ?        Ssl  Nov06   0:04 /usr/libexec/
+root         504  0.0  0.2   7284  2616 ?        Ss   Nov06   0:00 /usr/sbin/cro
+message+     505  0.0  0.4   9184  4776 ?        Ss   Nov06   0:11 @dbus-daemon 
+root         510  0.0  1.4  33208 14504 ?        Ss   Nov06   0:00 /usr/bin/pyth
+syslog       511  0.0  0.4 222400  4636 ?        Ssl  Nov06   0:00 /usr/sbin/rsy
+root         512  0.0  0.0   2888   940 ?        Ss   Nov06   0:01 /bin/sh /snap
+root         513  0.0  0.0   2888   868 ?        Ss   Nov06   0:01 /bin/sh /snap
+root         515  0.0  2.0 727884 19896 ?        Ssl  Nov06   0:09 /usr/lib/snap
+root         517  0.0  0.4  23532  4364 ?        Ss   Nov06   0:00 /lib/systemd/
+root         519  0.0  0.8 392792  8824 ?        Ssl  Nov06   0:00 /usr/libexec/
+root         533  0.0  0.1   6172  1040 tty1     Ss+  Nov06   0:00 /sbin/agetty 
+root         536  0.0  0.6 306740  6296 ?        Ssl  Nov06   0:00 /usr/sbin/lig
+root         569  0.0  0.4  15420  4768 ?        Ss   Nov06   0:00 sshd: /usr/sb
+root         581  0.0  0.7 236140  7596 ?        Ssl  Nov06   0:00 /usr/libexec/
+root         621  0.0  0.2 294684  2556 ?        Sl   Nov06   0:23 /usr/sbin/VBo
+root         638  0.0  7.0 361772 69340 tty7     Ssl+ Nov06   0:12 /usr/lib/xorg
+root         744  0.0  0.6 162608  6108 ?        Sl   Nov06   0:00 lightdm --ses
+ubuntu       750  0.0  0.6  17336  6216 ?        Ss   Nov06   0:00 /lib/systemd/
+ubuntu       751  0.0  0.3 103632  3732 ?        S    Nov06   0:00 (sd-pam)
+ubuntu       768  0.0  0.5  37364  4984 ?        S<sl Nov06   0:00 /usr/bin/pipe
+ubuntu       769  0.0  0.4  21256  4732 ?        Ssl  Nov06   0:00 /usr/bin/pipe
+ubuntu       770  0.0  0.9 541936  8972 ?        S<sl Nov06   0:00 /usr/bin/puls
+ubuntu       773  0.0  3.2 445884 31988 ?        Ssl  Nov06   0:00 xfce4-session
+rtkit        779  0.0  0.1 154000  1508 ?        SNsl Nov06   0:01 /usr/libexec/
+ubuntu       797  0.0  0.4   8840  4312 ?        Ss   Nov06   0:32 /usr/bin/dbus
+ubuntu       842  0.0  0.0  18784   440 ?        S    Nov06   0:00 /usr/bin/VBox
+ubuntu       843  0.0  0.1 151052  1224 ?        Sl   Nov06   0:00 /usr/bin/VBox
+ubuntu       854  0.0  0.0  18784   444 ?        S    Nov06   0:00 /usr/bin/VBox
+ubuntu       855  0.0  0.1 151020  1852 ?        Sl   Nov06   0:00 /usr/bin/VBox
+ubuntu       857  0.0  0.0  18784   444 ?        S    Nov06   0:00 /usr/bin/VBox
+ubuntu       858  0.3  0.1 151536  1824 ?        Sl   Nov06   4:54 /usr/bin/VBox
+ubuntu       863  0.0  0.0  18784   448 ?        S    Nov06   0:00 /usr/bin/VBox
+ubuntu       864  0.0  0.2 151264  2936 ?        Sl   Nov06   0:00 /usr/bin/VBox
+ubuntu       882  0.0  0.6 309612  6624 ?        Ssl  Nov06   0:00 /usr/libexec/
+ubuntu       888  0.0  0.4   8432  4100 ?        S    Nov06   0:00 /usr/bin/dbus
+ubuntu       892  0.0  0.5 230996  5656 ?        Sl   Nov06   0:00 /usr/lib/x86_
+ubuntu       897  0.0  0.7 162748  7220 ?        Sl   Nov06   0:00 /usr/libexec/
+ubuntu       904  0.0  0.1   7968  1076 ?        Ss   Nov06   0:00 /usr/bin/ssh-
+ubuntu       911  0.0  0.2  81804  2720 ?        SLs  Nov06   0:00 /usr/bin/gpg-
+ubuntu       914  0.0  4.2 565284 41428 ?        Sl   Nov06   0:03 xfwm4
+ubuntu       927  0.0  0.6 238436  6372 ?        Ssl  Nov06   0:00 /usr/libexec/
+ubuntu       971  0.0  2.1 227332 20720 ?        Sl   Nov06   0:00 xfsettingsd
+root         974  0.0  0.6 240132  6584 ?        Ssl  Nov06   0:02 /usr/libexec/
+ubuntu       982  0.0  4.0 474456 39360 ?        Sl   Nov06   0:06 xfce4-panel
+ubuntu       986  0.0  1.9 339356 19488 ?        Sl   Nov06   0:00 Thunar --daem
+ubuntu      1006  0.0  4.9 406036 48260 ?        Sl   Nov06   0:03 xfdesktop
+ubuntu      1038  0.0  2.1 293216 21516 ?        Sl   Nov06   0:00 /usr/lib/x86_
+ubuntu      1041  0.0  0.7 586500  7200 ?        Sl   Nov06   0:00 xiccd
+ubuntu      1046  0.0  1.3 184780 13600 ?        Sl   Nov06   0:00 /usr/lib/poli
+colord      1059  0.0  0.9 242688  9604 ?        Ssl  Nov06   0:00 /usr/libexec/
+ubuntu      1068  0.0  2.0 339156 20168 ?        Sl   Nov06   0:00 /usr/lib/x86_
+ubuntu      1069  0.1  2.4 670164 24084 ?        Sl   Nov06   1:42 /usr/lib/x86_
+ubuntu      1070  0.0  2.4 404324 23840 ?        Sl   Nov06   0:00 /usr/lib/x86_
+ubuntu      1103  0.0  2.2 291304 21604 ?        Sl   Nov06   0:00 /usr/lib/x86_
+ubuntu      1109  0.0  0.8 313588  7868 ?        Ssl  Nov06   0:00 /usr/libexec/
+ubuntu      1126  0.0  0.6 386280  6616 ?        Sl   Nov06   0:00 /usr/libexec/
+ubuntu      1132  0.0  0.5 160720  5552 ?        Ssl  Nov06   0:00 /usr/libexec/
+root        1235  0.0  0.4 142540  4288 ?        Sl   Nov06   0:00 cupsd -f -s /
+root        1254  0.0  0.4 260128  4300 ?        Sl   Nov06   0:00 cups-browsed 
+root        1763  0.0  0.0      0     0 ?        I    14:21   0:10 [kworker/0:0-
+root        1820  0.0  0.0      0     0 ?        I    19:17   0:00 [kworker/u2:2
+ubuntu      1835  0.0  1.3  27956 12816 ?        S    19:32   0:00 /usr/bin/pyth
+ubuntu      1836  0.0  1.5 298756 15296 ?        Sl   19:32   0:00 /usr/bin/gnom
+ubuntu      1839  0.1  3.6 421492 35696 ?        Ssl  19:32   0:01 /usr/libexec/
+ubuntu      1879  0.0  0.4   9068  4804 pts/0    Ss   19:32   0:00 bash
+ubuntu      1903  0.7  9.9 1176443976 97740 ?    Ssl  19:32   0:07 /usr/share/co
+ubuntu      1906  0.0  2.9 33765796 29132 ?      S    19:32   0:00 /usr/share/co
+ubuntu      1907  0.0  2.9 33765784 29140 ?      S    19:32   0:00 /usr/share/co
+ubuntu      1909  0.0  0.9 33765812 8828 ?       S    19:32   0:00 /usr/share/co
+ubuntu      1922  0.0  0.3 33575892 2948 ?       Sl   19:32   0:00 /usr/share/co
+ubuntu      1934  0.0  0.9 400236  9712 ?        Ssl  19:32   0:00 /usr/libexec/
+ubuntu      1937  1.0  4.7 33864624 46160 ?      Sl   19:32   0:09 /usr/share/co
+ubuntu      1943  0.0  0.6 460988  6504 ?        Ssl  19:32   0:00 /usr/libexec/
+ubuntu      1951  0.0  0.4 233968  4428 ?        Ssl  19:32   0:00 /usr/libexec/
+root        1957  0.0  0.1   2792  1100 ?        Ss   19:32   0:00 fusermount3 -
+ubuntu      1962  0.0  1.4 333372 14624 ?        Ssl  19:32   0:00 /usr/libexec/
+ubuntu      1979  0.0  4.1 33815144 40744 ?      Sl   19:32   0:00 /usr/share/co
+ubuntu      1990  4.5 15.0 1184698400 147896 ?   Sl   19:32   0:45 /usr/share/co
+ubuntu      2005  0.2  7.5 1176304756 74244 ?    Sl   19:32   0:02 /usr/share/co
+ubuntu      2016  0.0  6.3 1176304852 62224 ?    Sl   19:32   0:00 /usr/share/co
+ubuntu      2017  0.4  6.6 1176304288 65328 ?    Sl   19:32   0:04 /usr/share/co
+ubuntu      2018  0.0  6.0 1176304816 59056 ?    Sl   19:32   0:00 /usr/share/co
+root        2126  0.0  0.0      0     0 ?        I    19:41   0:00 [kworker/u2:0
+ubuntu      2153  0.4  1.7  27956 17128 ?        S    19:48   0:00 /usr/bin/pyth
+ubuntu      2154  0.0  2.0 298756 20292 ?        Sl   19:48   0:00 /usr/bin/gnom
+ubuntu      2162  0.0  0.5   9068  5112 pts/1    Ss   19:48   0:00 bash
+root        2169  0.0  0.0      0     0 ?        I    19:48   0:00 [kworker/u2:1
+ubuntu      2170  0.0  0.1   6188  1092 pts/0    S+   19:48   0:00 sleep 600
+ubuntu      2172  0.0  0.3  10460  3292 pts/1    R+   19:49   0:00 ps aux
+ubuntu@ubuntu-jammy:~$ kill -15 2170
+ubuntu@ubuntu-jammy:~$ S
+
+
+
+-------------------------------------------------------------------------------------
+
+
+ubuntu@ubuntu-jammy:~$ man 2 dup
+ubuntu@ubuntu-jammy:~$ sleep 600
+Terminated
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

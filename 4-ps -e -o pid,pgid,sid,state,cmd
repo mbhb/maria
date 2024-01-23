@@ -1,0 +1,1 @@
+ps -u $USER -e -o pid,ppid,pgid,sid,state,cmd
