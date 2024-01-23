@@ -1,0 +1,56 @@
+#include <iostream>
+#include <string>
+
+int maxDigs;
+// 0 <= n <= 10^18
+int longitud(long long int n) {
+	int salida = 0;
+	while (n != 0) {
+		n /= 10;
+		salida++;
+	}
+	return salida;
+}
+// longitud = n.size();
+
+//A pesar de que la funcion este implementada como void, a nivel de especificacion lo haremos como si de un vector de enteros se tratara.
+
+// 1 <= raiz <= 10^18
+void recursion(long long int raiz) { //dev: v
+	//t(n) = maxDigs - longitud(n)
+	int digitos = longitud(raiz);
+	if (digitos <= maxDigs) { //Recursion
+		if (raiz % digitos == 0) { //Si el numero es polidivisible, lo escribe y escribe los numeros polidivisibles que parten de el.
+			std::cout << raiz << "\n";
+			for (int i = 0; i < 10; i++) {
+				long long int aux = (10 * raiz) + i;
+				recursion(aux);
+			}
+		}//Si no es polidivisible, no hacer nada
+	}//Caso Base: longitud(n) > maxDigs. No hacer nada.
+}
+// booelan esPolidivisible(n) dev: n polidivisible
+// p.t. i : 0 <= i < v.size() : (polidivisible(v[i]) && longitud(v[i]) <= maxDigs) &&
+// v.size() == # i : i natural : (longitud(i) <= maxDigs && ex. j, k : j, k naturales : i == raiz * (10^j) + k) &&
+// ordenadoLexicografico(v);
+
+void escribePolidivisibles(long long raiz, int maxDigitos) {
+	maxDigs = maxDigitos;
+	recursion(raiz);
+}
+
+bool resuelveCaso() {
+	long long int raiz;
+	int maxDigitos;
+	std::cin >> raiz;
+	std::cin >> maxDigitos;
+		if (!std::cin) // fin de la entrada
+			return false;
+	escribePolidivisibles(raiz, maxDigitos);
+	std::cout << "---\n";
+		return true;
+}
+int main() {
+	while (resuelveCaso());
+	return 0;
+}
