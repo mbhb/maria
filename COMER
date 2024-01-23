@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+//{2 <= N < 10^5 && pt i : 0 <= i < N : v[i] >= 0}
+int buscar(vector<int> v, int n) {
+	int lactual = 0;
+	int lmax = 0;
+	// INV <=> {buscar = max p,q : 0 <= p <= q < n && esRecta(p,q) : q - p}
+	// Funci�n de Cota: N - n
+	//Condici�n de bucle: j < n
+	for (int j = 1; j < n; j++) {
+		if (v[j] == v[j - 1]) {
+			lactual++;
+			if (lactual > lmax) {
+				lmax = lactual;
+			}
+		}
+		else {
+			lactual = 0;
+		}
+	}
+	return lmax;
+}
+//{buscar = max p,q : 0 <= p <= q < N && esRecta(p,q) : q - p}
+//esRecta(p,q) := pt i : p <= i <= q : v[i] == v[p]
+
+void resuelveCaso(vector<int> v) {
+	int sol = buscar(v, v.size());
+	if (sol == 0) {
+		cout << "HOY NO COMEN\n";
+	}
+	else {
+		cout << sol << "\n";
+	}
+}
+
+
+int main() {
+	int aux;
+	cin >> aux;
+	while (aux != -1) {
+		vector<int> v;
+		v.push_back(aux);
+		cin >> aux;
+		while (aux != -1) {
+			v.push_back(aux);
+			cin >> aux;
+		}
+		resuelveCaso(v);
+		cin >> aux;
+	}
+	return 0;
+}
