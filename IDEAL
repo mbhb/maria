@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+/*
+Recursion final
+orden: log(n)
+{ordenado(v) && 0 <= ini < N && -1 <= fin < N && letra1 < letra2 && (p.t. i : 0 <= i < N : letra1 <= v[i] <= letra2) &&
+	N = letra2 - letra1 && p.t. i,j : 0 <= i < j < N : v[i] != v[j]}
+fun resolver(v[0, ..., N) char, ini ent, fin ent, letra1 char, letra2 char) dev r char 
+{letra1 <= r <= letra2 && p.t. i : 0 <= i < N : v[i] != r}
+ordenado(v) == p.t. i,j : 0 <= i < j < N : v[i] < v[j])
+t(fin, ini) = fin - ini
+*/
+
+char resolver(vector<char> v, int ini, int fin, char letra1, char letra2) {
+	// c.b. 
+	if (fin - ini <= 0) {
+		return (v[ini] == letra1) ? letra2 : letra1;
+	}
+	// c.r
+	else {
+		int mitad = (ini + fin) / 2;
+		char ideal;
+		if ((letra2 - letra1) % 2 == 0) {
+			ideal = (letra1 + letra2) / 2 - 1;
+		}
+		else {
+			ideal = (letra1 + letra2) / 2;
+		}
+		if (v[mitad] == ideal) {
+			return resolver(v, mitad + 1, fin, ideal + 1, letra2);
+		}
+		else {
+			return resolver(v, ini, mitad - 1, letra1, ideal);
+		}
+	}
+}
+
+
+void resuelveCaso() {
+	char letra1, letra2, aux;
+	cin >> letra1;
+	cin >> letra2;
+	vector<char>v;
+	for (int i = 0; i < letra2 - letra1; i++) {
+		cin >> aux;
+		v.push_back(aux);
+	}
+	cout << resolver(v, 0, v.size() - 1, letra1, letra2) << '\n';
+}
+
+int main() {
+	int numCasos;
+	std::cin >> numCasos;
+	for (int i = 0; i < numCasos; ++i)
+		resuelveCaso();
+	return 0;
+}
