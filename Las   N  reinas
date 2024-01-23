@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+typedef struct {
+	int inicio;
+	int fin;
+}tSol;
+void resuelveCaso();
+
+tSol buscar(vector<int> v, int n, int h);
+
+int main() {
+	int numCasos;
+	std::cin >> numCasos;
+	for (int i = 0; i < numCasos; ++i)
+		resuelveCaso();
+	system("pause");
+	return 0;
+}
+void resuelveCaso() {
+	int n, h;
+	cin >> n;
+	cin >> h;
+	vector<int> v;
+	for (int i = 0; i < n; i++) {
+		int aux;
+		cin >> aux;
+		v.push_back(aux);
+	}
+	tSol sol = buscar(v, n, h);
+	cout << sol.inicio << " " << sol.fin << "\n";
+}
+//{N >= 1 && Ex. i : 0 <= i < N : v[i] > n}
+tSol buscar(vector<int> v, int n, int h) {
+	int iniactual = 0;
+	int lactual = 0;
+	int lmax = 0;
+	int inimax = 0;
+	// INV <=> {pt i : sol.ini <= i <= sol.fin : v[i] > n && pt ini, fin : 0 <= ini <= fin < j : (pt i : ini <= i <= fin : v[i] > n) =>
+	// => (sol.fin - sol.ini + 1 >= fin - ini + 1)}
+	// Función de Cota: N - n
+	//Condición de bucle: j < n
+	for (int j = 0; j < n; j++) {
+		if (v[j] > h) {
+			lactual++;
+			if (lactual > lmax) {
+				lmax = lactual;
+				inimax = iniactual;
+			}
+		}
+		else {
+			lactual = 0;
+			iniactual = j + 1;
+		}
+	}
+	tSol sol;
+	sol.inicio = inimax;
+	sol.fin = inimax + lmax - 1;
+	return sol;
+}
+//{pt i : sol.ini <= i <= sol.fin : v[i] > n && pt ini, fin : 0 <= ini <= fin < N : (pt i : ini <= i <= fin : v[i] > n) =>
+// => (sol.fin - sol.ini + 1 >= fin - ini + 1)}
